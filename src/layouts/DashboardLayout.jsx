@@ -44,7 +44,9 @@ export default function DashboardLayout() {
 
   const drawer = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Toolbar />
+      <Toolbar>
+        <Typography variant="h6" noWrap component="h4">User</Typography>
+      </Toolbar>
       <Divider />
 
       <List>
@@ -117,7 +119,11 @@ export default function DashboardLayout() {
             variant="h6"
             noWrap
             component="div">
-            Dashboard
+            <ListItemButton
+              component={Link}
+              to={"/"}>
+              <ListItemText primary={'BooksCourier'} />
+            </ListItemButton>
           </Typography>
         </Toolbar>
       </AppBar>
@@ -168,7 +174,7 @@ export default function DashboardLayout() {
           mt: 8,
           width: "100%",
         }}>
-        {/* <Typography
+        <Typography
           variant="h4"
           sx={{ mb: 2 }}>
           Welcome Back 👋
@@ -178,10 +184,10 @@ export default function DashboardLayout() {
           This area is fully responsive. Add your dashboard charts, cards,
           analytics, tables, and pages here. The layout adjusts beautifully for
           mobiles, tablets, and desktops.
-        </Typography> */}
+        </Typography>
 
         {/* Example content box */}
-        {/* <Box
+        <Box
           sx={{
             bgcolor: "#fff",
             p: 3,
@@ -192,7 +198,7 @@ export default function DashboardLayout() {
           <Typography>
             Replace this box with your real dashboard widgets.
           </Typography>
-        </Box> */}
+        </Box>
         <Outlet />
       </Box>
     </Box>

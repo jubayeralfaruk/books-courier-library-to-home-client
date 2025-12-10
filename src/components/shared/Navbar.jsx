@@ -36,7 +36,9 @@ const Navbar = () => {
           </li>
         </>
       )}
-
+      <li className="nav-btn">
+        <NavLink to="create-seller-account">Apply as Seller</NavLink>
+      </li>
       <li className="nav-btn">
         <NavLink to="/about">About Us</NavLink>
       </li>

@@ -14,6 +14,7 @@ import Payment from "../pages/dashboard/Payment/Payment";
 import PaymentSuccess from "../pages/dashboard/Payment/PaymentSuccess";
 import PaymentCancelled from "../pages/dashboard/Payment/PaymentCancelled";
 import PaymentHistory from "../pages/dashboard/PaymentHistory";
+import SellerAccount from "../pages/Seller/SellerAccount";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: "books/:id",
         Component: BookDetails,
+      },
+      {
+        path: "create-seller-account",
+        element: <PrivateRoute><SellerAccount /></PrivateRoute>
       },
       {
         path: "myProfile",
@@ -53,6 +58,10 @@ export const router = createBrowserRouter([
       {
         path: "register",
         Component: Register,
+      },
+      {
+        path: "reset-password",
+        element: <div>Reset Password Page</div>,
       },
     ],
   },
@@ -87,7 +96,7 @@ export const router = createBrowserRouter([
       {
         path: "payment-cancelled",
         Component: PaymentCancelled,
-      }
+      },
     ],
   },
 ]);
