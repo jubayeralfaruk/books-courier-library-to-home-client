@@ -1,11 +1,12 @@
 import { Link } from "react-router";
 import UseAxiosSecure from "../hooks/useAxiosSecure";
+import { useState } from "react";
 
 export default function AllBooks() {
-  const books = [];
+  const [books, setBooks] = useState([]);
   const axiosSecure = UseAxiosSecure();
   axiosSecure.get("/books").then((res) => {
-    books.push(...res.data);
+    setBooks(res.data);
   });
   return (
     <>
