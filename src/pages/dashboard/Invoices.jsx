@@ -1,24 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody, TableContainer } from "@mui/material";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import {
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableContainer,
+} from "@mui/material";
+import UseAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function Invoices() {
-  const api = useAxiosSecure();
+  const api = UseAxiosSecure();
   const [invoices, setInvoices] = useState([]);
 
   useEffect(() => {
-    api.get("/payments")
+    api
+      .get("/payments")
       .then((res) => setInvoices(res.data || []))
       .catch((err) => console.error("Failed to fetch invoices", err));
   }, [api]);
 
   return (
     <Box>
-      <Typography variant="h4" fontWeight="bold" mb={3}>
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        mb={3}>
         Invoices
       </Typography>
 
-      <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
+      <TableContainer
+        component={Paper}
+        sx={{ borderRadius: 3 }}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
@@ -33,8 +49,14 @@ export default function Invoices() {
             {invoices.map((inv) => (
               <TableRow key={inv._id}>
                 <TableCell>{inv.paymentId || inv.id || "—"}</TableCell>
-                <TableCell>{typeof inv.amount === "number" ? `$${inv.amount.toFixed(2)}` : inv.amount}</TableCell>
-                <TableCell>{inv.date?.slice(0, 10) || inv.createdAt?.slice(0, 10) || "—"}</TableCell>
+                <TableCell>
+                  {typeof inv.amount === "number"
+                    ? `$${inv.amount.toFixed(2)}`
+                    : inv.amount}
+                </TableCell>
+                <TableCell>
+                  {inv.date?.slice(0, 10) || inv.createdAt?.slice(0, 10) || "—"}
+                </TableCell>
                 <TableCell>{inv.bookTitle || inv.bookName || "—"}</TableCell>
               </TableRow>
             ))}

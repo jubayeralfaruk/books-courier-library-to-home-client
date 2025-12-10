@@ -1,14 +1,14 @@
 import React, { use } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import UseAxiosSecure from "../../../hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 
 export default function Payment() {
   const { id } = useParams();
   console.log(id);
 
-  const axiosSecure = useAxiosSecure();
+  const axiosSecure = UseAxiosSecure();
   const { data: order = {}, isLoading: orderLoading } = useQuery({
     queryKey: ["order-details", id],
     queryFn: async () => {
@@ -39,7 +39,10 @@ export default function Payment() {
       status: "paid",
     };
 
-    const res = await axiosSecure.post("/payment-checkout-session", paymentInfo);
+    const res = await axiosSecure.post(
+      "/payment-checkout-session",
+      paymentInfo
+    );
     console.log(res.data);
 
     if (res.data.url) {

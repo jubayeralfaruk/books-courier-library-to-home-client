@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import UseAxiosSecure from "../../hooks/useAxiosSecure";
 
 const SignInGoogle = () => {
-  const axiosSecure = useAxiosSecure();
+  const axiosSecure = UseAxiosSecure();
   const [load, setLoad] = useState(false);
   const { signInGoogle, loading } = useAuth();
   const handleGoogleSignIn = () => {

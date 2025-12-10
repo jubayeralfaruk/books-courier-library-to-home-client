@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import UseAxiosSecure from "../../hooks/useAxiosSecure";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import HistoryIcon from "@mui/icons-material/History";
@@ -20,7 +20,7 @@ const SkeletonCard = () => {
 
 const PaymentHistory = () => {
   const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const axiosSecure = UseAxiosSecure();
 
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
@@ -37,8 +37,13 @@ const PaymentHistory = () => {
   return (
     <div className="p-6">
       {/* Page Title */}
-      <div className="flex items-center gap-3 mb-6" data-aos="fade-down">
-        <HistoryIcon className="text-blue-600" style={{ fontSize: 40 }} />
+      <div
+        className="flex items-center gap-3 mb-6"
+        data-aos="fade-down">
+        <HistoryIcon
+          className="text-blue-600"
+          style={{ fontSize: 40 }}
+        />
         <h2 className="text-3xl font-bold text-gray-800">Payment History</h2>
       </div>
 
@@ -55,8 +60,7 @@ const PaymentHistory = () => {
       {!isLoading && orderHistory.length === 0 && (
         <p
           className="text-center text-gray-600 text-lg mt-10"
-          data-aos="zoom-in"
-        >
+          data-aos="zoom-in">
           No payment history found.
         </p>
       )}
@@ -67,8 +71,7 @@ const PaymentHistory = () => {
           <div
             key={payment._id}
             className="bg-white p-5 shadow-lg rounded-xl border border-gray-200 hover:shadow-2xl transition duration-300 transform hover:-translate-y-1"
-            data-aos="fade-up"
-          >
+            data-aos="fade-up">
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
               {payment.bookTitle}
             </h3>
@@ -96,7 +99,9 @@ const PaymentHistory = () => {
 
             <p className="text-gray-600 text-sm mt-2">
               <strong>Tracking ID:</strong>{" "}
-              <span className="font-mono text-blue-600">{payment.trackingId}</span>
+              <span className="font-mono text-blue-600">
+                {payment.trackingId}
+              </span>
             </p>
           </div>
         ))}

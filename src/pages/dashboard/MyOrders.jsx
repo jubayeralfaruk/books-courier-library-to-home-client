@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import UseAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
 export default function MyOrdersTailwind() {
-  const axiosSecure = useAxiosSecure();
+  const axiosSecure = UseAxiosSecure();
   const { user } = useAuth();
   const [order, setOrders] = useState([]);
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ export default function MyOrdersTailwind() {
   };
 
   const handleCancel = (orderId) => {
-
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to undo this!",

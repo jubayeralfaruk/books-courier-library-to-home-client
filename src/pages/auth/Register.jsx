@@ -6,10 +6,10 @@ import SignInGoogle from "./SignInGoogle";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import UseAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Register = () => {
-  const axiosSecure = useAxiosSecure();
+  const axiosSecure = UseAxiosSecure();
   useEffect(() => {
     AOS.init({ duration: 1000, once: true, mirror: false });
   }, []);
@@ -201,13 +201,12 @@ const Register = () => {
         </div>
 
         {/* Google Button */}
-                <div 
-                    className="mt-5"
-                    data-aos="flip-left"
-                    data-aos-delay="300"
-                >
-                    <SignInGoogle />
-                </div>
+        <div
+          className="mt-5"
+          data-aos="flip-left"
+          data-aos-delay="300">
+          <SignInGoogle />
+        </div>
 
         {/* Already have account */}
         <p

@@ -1,13 +1,12 @@
 import { Link } from "react-router";
-import useAxiosSecure from "../hooks/useAxiosSecure";
-
-const books = [];
-const axiosSecure = useAxiosSecure();
-axiosSecure.get("/books").then((res) => {
-  books.push(...res.data);
-});
+import UseAxiosSecure from "../hooks/useAxiosSecure";
 
 export default function AllBooks() {
+  const books = [];
+  const axiosSecure = UseAxiosSecure();
+  axiosSecure.get("/books").then((res) => {
+    books.push(...res.data);
+  });
   return (
     <>
       <div className="max-w-7xl mx-auto my-8 p-3">
