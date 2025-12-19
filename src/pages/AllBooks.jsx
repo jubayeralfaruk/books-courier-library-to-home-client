@@ -3,8 +3,12 @@ import { motion } from "framer-motion";
 import { Link } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import UseAxiosSecure from "../hooks/useAxiosSecure";
+import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
-/* ---------------- Debounce (inline) ---------------- */
+/* ---------------- Debounce ---------------- */
 function useDebounce(value, delay = 500) {
   const [debounced, setDebounced] = useState(value);
 
@@ -16,7 +20,7 @@ function useDebounce(value, delay = 500) {
   return debounced;
 }
 
-/* ---------------- Skeleton Card ---------------- */
+/* ---------------- Skeleton ---------------- */
 function BookSkeleton() {
   return (
     <div className="animate-pulse bg-white rounded-xl shadow p-4">
@@ -31,6 +35,7 @@ function BookSkeleton() {
 /* ---------------- Main Page ---------------- */
 export default function AllBooks() {
   const axiosSecure = UseAxiosSecure();
+  const { user } = useAuth();
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
@@ -38,35 +43,35 @@ export default function AllBooks() {
   const limit = 8;
 
   const debouncedSearch = useDebounce(search);
-
-  /* ---------- Fetch Books ---------- */
-  const { data: books = [], isLoading } = useQuery({
-    queryKey: ["books"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/books"); // only published from backend
-      return res.data;
-    },
-  });
-
-  /* ---------- Search ---------- */
-  let filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(debouncedSearch.toLowerCase())
-  );
-
-  /* ---------- Sort ---------- */
-  if (sort === "low") filteredBooks.sort((a, b) => a.price - b.price);
-  if (sort === "high") filteredBooks.sort((a, b) => b.price - a.price);
-
-  /* ---------- Infinite Scroll ---------- */
-  const visibleBooks = filteredBooks.slice(0, page * limit);
   const loadMoreRef = useRef(null);
 
+  /* ---------- Fetch Books (SERVER SIDE) ---------- */
+  const {
+    data,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ["books", debouncedSearch, sort, page],
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/books?search=${debouncedSearch}&sort=${sort}&page=${page}&limit=${limit}`
+      );
+      return res.data;
+    },
+    keepPreviousData: true,
+  });
+
+  const books = data?.books || [];
+  const total = data?.total || 0;
+
+  /* ---------- Infinite Scroll ---------- */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (
           entries[0].isIntersecting &&
-          visibleBooks.length < filteredBooks.length
+          books.length < total &&
+          !isFetching
         ) {
           setPage((prev) => prev + 1);
         }
@@ -76,13 +81,69 @@ export default function AllBooks() {
 
     if (loadMoreRef.current) observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
-  }, [visibleBooks, filteredBooks]);
+  }, [books, total, isFetching]);
+
+  /* ---------- Reset page on search/sort ---------- */
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, sort]);
+
+  /* ---------- Fetch Wishlist ---------- */
+  const { data: wishlist = [], refetch: refetchWishlist } = useQuery({
+    queryKey: ["wishlist", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/wishlist?email=${user.email}`);
+      return res.data;
+    },
+  });
+
+  const wishlistIds = wishlist.map((item) => item.bookId);
+
+  /* ---------- Wishlist Toggle ---------- */
+  const handleWishlistToggle = async (book) => {
+    if (!user) {
+      toast.error("Please login first");
+      return;
+    }
+
+    const isWishlisted = wishlistIds.includes(book._id);
+
+    try {
+      if (!isWishlisted) {
+        await axiosSecure.post("/wishlist", {
+          user_email: user.email,
+          bookId: book._id,
+          title: book.title,
+          image: book.image,
+          price: book.price,
+          sortDescription: book.sortDescription,
+        });
+        toast.success("Added to wishlist");
+      } else {
+        await axiosSecure.delete("/wishlist", {
+          data: {
+            user_email: user.email,
+            bookId: book._id,
+          },
+        });
+        toast.info("Removed from wishlist");
+      }
+
+      refetchWishlist();
+    } catch {
+      toast.error("Wishlist action failed");
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-center text-4xl font-bold mb-7 ">All Books</h2>
+      <h2 className="text-center text-4xl font-bold mb-7">
+        All Books
+      </h2>
+
       {/* ---------- Search & Sort ---------- */}
-      <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
+      <div className="flex justify-between gap-4 mb-6">
         <input
           type="text"
           placeholder="Search books by name..."
@@ -92,9 +153,9 @@ export default function AllBooks() {
         />
 
         <select
-          className="select select-bordered w-full md:w-60"
-          onChange={(e) => setSort(e.target.value)}
-        >
+          className="select select-bordered w-60"
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}>
           <option value="">Sort by price</option>
           <option value="low">Low → High</option>
           <option value="high">High → Low</option>
@@ -103,64 +164,61 @@ export default function AllBooks() {
 
       {/* ---------- Books Grid ---------- */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {isLoading &&
-          [...Array(8)].map((_, i) => <BookSkeleton key={i} />)
-        }
+        {(isLoading || isFetching) &&
+          [...Array(8)].map((_, i) => <BookSkeleton key={i} />)}
 
-        {visibleBooks.map((book) => (
+        {books.map((book) => (
           <motion.div
             key={book._id}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.04 }}
             transition={{ duration: 0.3 }}
-            className="relative rounded-xl shadow-gray-900 shadow-2xl hover:shadow transition"
-          >
+            className="relative rounded-xl shadow-gray-900 shadow-2xl">
+
             <Link to={`/books/${book._id}`}>
               <img
                 src={book.image}
                 alt={book.title}
-                className="h-52 w-full object-contain p-3 rounded-t-xl"
+                className="h-52 w-full object-contain p-3"
               />
 
               <div className="p-4">
-                <h3 className="font-semibold text-lg line-clamp-1">
+                <h3 className="font-semibold line-clamp-1">
                   {book.title}
                 </h3>
-
-                <p className="text-sm text-gray-500 line-clamp-2 mt-1">
+                <p className="text-sm text-gray-500 line-clamp-2">
                   {book.sortDescription}
                 </p>
 
-                <div className="flex justify-between items-center mt-3">
-                  <span className="text-yellow-500 text-sm">
-                    ⭐ {book.rating}
-                  </span>
-                  <span className="text-blue-600 font-bold">
-                    ৳ {book.price}
-                  </span>
+                <div className="flex justify-between mt-3">
+                  <span>⭐ {book.rating}</span>
+                  <span className="font-bold">৳ {book.price}</span>
                 </div>
               </div>
             </Link>
 
-            {/* ---------- Wishlist ---------- */}
+            {/* Wishlist */}
             <button
-              className="absolute top-3 right-3 bg-white p-2 rounded-full shadow hover:bg-pink-50"
+              className="absolute top-3 right-3 bg-white p-2 rounded-full"
               onClick={(e) => {
                 e.preventDefault();
-                // backend ready hole ekhane wishlist API call hobe
-              }}
-            >
-              ❤️
+                handleWishlistToggle(book);
+              }}>
+              {wishlistIds.includes(book._id) ? (
+                <FavoriteIcon className="text-pink-500" />
+              ) : (
+                <FavoriteBorderIcon className="text-gray-600" />
+              )}
             </button>
           </motion.div>
         ))}
       </div>
 
       {/* ---------- Infinite Scroll Trigger ---------- */}
-      <div ref={loadMoreRef} className="h-12 mt-10"></div>
+      <div ref={loadMoreRef} className="h-12 mt-10" />
 
-      {visibleBooks.length === 0 && (
+      {books.length === 0 && !isLoading && (
         <p className="text-center text-gray-400 mt-16">
           No books found
         </p>
