@@ -4,7 +4,7 @@ import "aos/dist/aos.css";
 import UseAxiosSecure from "../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,7 @@ export default function BookDetails() {
   const { user } = useAuth();
   const axiosSecure = UseAxiosSecure();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
 
@@ -47,6 +48,9 @@ export default function BookDetails() {
       .then((res) => {
         if (res.data.insertedId) {
           toast.success("Order placed successfully!");
+          setOpen(false);
+          reset();
+          navigate("/dashboard/my-orders");
         }
       });
 
@@ -130,76 +134,6 @@ export default function BookDetails() {
         </div>
       </div>
 
-      {/* Modal */}
-      {/* {open && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50"
-          data-aos="zoom-in"
-        >
-          <div className=" w-full max-w-lg p-8 rounded-2xl shadow-2xl relative">
-            <h2 className="text-2xl font-bold mb-4">Place Your Order</h2>
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <label className="font-medium">Name</label>
-                <input
-                  type="text"
-                  value={user.name}
-                  readOnly
-                  className="w-full mt-1 p-3 border rounded-xl"
-                />
-              </div>
-
-              <div>
-                <label className="font-medium">Email</label>
-                <input
-                  type="email"
-                  value={user.email}
-                  readOnly
-                  className="w-full mt-1 p-3 border rounded-xl"
-                />
-              </div>
-
-              <div>
-                <label className="font-medium">Phone Number</label>
-                <input
-                  type="text"
-                  {...register("phone", { required: true })}
-                  className="w-full mt-1 p-3 border rounded-xl"
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm">Phone is required</p>
-                )}
-              </div>
-
-              <div>
-                <label className="font-medium">Address</label>
-                <textarea
-                  {...register("address", { required: true })}
-                  className="w-full mt-1 p-3 border rounded-xl"
-                ></textarea>
-                {errors.address && (
-                  <p className="text-red-500 text-sm">Address is required</p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-lg font-semibold"
-              >
-                Place Order
-              </button>
-            </form>
-
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-xl"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )} */}
       {/* Modal */}
       {open && (
         <div

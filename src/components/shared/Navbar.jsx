@@ -2,13 +2,15 @@ import React, { use } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
+import useRole from "../../hooks/useRole";
 
 const Navbar = () => {
   const { user, signOutUser } = use(AuthContext);
   const location = useLocation();
+  const { role } = useRole();
 
   const { displayName, photoURL } = user || {};
-  
+
   const handleSingOut = () => {
     signOutUser()
       .then(() => {
@@ -34,11 +36,13 @@ const Navbar = () => {
           <li className="nav-btn">
             <NavLink to="/dashboard">Dashboard</NavLink>
           </li>
+          {role === "user" && (
+            <li className="nav-btn">
+              <NavLink to="create-seller-account">Apply as Seller</NavLink>
+            </li>
+          )}
         </>
       )}
-      <li className="nav-btn">
-        <NavLink to="create-seller-account">Apply as Seller</NavLink>
-      </li>
       <li className="nav-btn">
         <NavLink to="/about">About Us</NavLink>
       </li>
@@ -54,14 +58,16 @@ const Navbar = () => {
       <div className="navbar-start">
         {/* Mobile dropdown */}
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-ghost lg:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -73,13 +79,14 @@ const Navbar = () => {
 
           <ul
             tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-          >
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
             {links}
           </ul>
         </div>
 
-        <Link to="/" className="text-2xl font-bold">
+        <Link
+          to="/"
+          className="text-2xl font-bold">
           Books<span className="p-0 text-primary">Courier</span>
         </Link>
       </div>
@@ -94,8 +101,7 @@ const Navbar = () => {
             <div
               tabIndex={0}
               role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
+              className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
                 <img
                   src={
@@ -110,8 +116,7 @@ const Navbar = () => {
 
             <ul
               tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-            >
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
               <li>
                 <Link to="/myProfile">Profile</Link>
               </li>
@@ -124,12 +129,13 @@ const Navbar = () => {
           <>
             <Link
               to="/login"
-              className="btn secondary-btn gradient-border font-semibold"
-            >
+              className="btn secondary-btn gradient-border font-semibold">
               Login
             </Link>
 
-            <Link to="/register" className="btn primary-btn">
+            <Link
+              to="/register"
+              className="btn primary-btn">
               Register
             </Link>
           </>

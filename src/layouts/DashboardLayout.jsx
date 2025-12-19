@@ -16,31 +16,70 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MailIcon from "@mui/icons-material/Mail";
+import PeopleIcon from "@mui/icons-material/People";
+import InventoryIcon from "@mui/icons-material/Inventory";
 import { Link } from "react-router";
 import { Outlet } from 'react-router';
-// Icons
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import PeopleIcon from "@mui/icons-material/People";
+import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ListAltIcon from "@mui/icons-material/ListAlt"; // My Orders
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // ⭐ Profile icon
-import HistoryIcon from "@mui/icons-material/History"; // ⭐ Order History icon
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HistoryIcon from "@mui/icons-material/History";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import useRole from "../hooks/useRole";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+
+
+
 
 const drawerWidth = 240;
 
 export default function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 900px)");
+  const {role} = useRole();
+  console.log(role);
+  
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const menuItems = () => {
+  if (role === "admin") {
+    return [
+      { text: "Dashboard", path: "/dashboard", icon: <DashboardIcon /> },
+      { text: "Approve Seller", path: "approve-seller", icon: <HowToRegIcon /> },
+      { text: "Manage Users", path: "users-management", icon: <ManageAccountsIcon /> },
+      { text: "Manage Books", path: "manage-books", icon: <MenuBookIcon /> },
+      { text: "Profile", path: "/myProfile", icon: <AccountCircleIcon /> },
+    ];
+  }
+
+  if (role === "seller") {
+    return [
+      { text: "Dashboard", path: "/dashboard", icon: <DashboardIcon /> },
+      { text: "Add Book", path: "add-book", icon: <ShoppingCartIcon /> },
+      { text: "My Books", path: "my-books", icon: <ShoppingCartIcon /> },
+      { text: "Order Management", path: "order-management", icon: <ListAltIcon /> },
+      { text: "My Orders", path: "my-orders", icon: <ShoppingCartIcon /> },
+      { text: "Payment History", path: "order-history", icon: <HistoryIcon /> },
+      { text: "Profile", path: "/myProfile", icon: <AccountCircleIcon /> },
+    ];
+  }
+
+  return [
+    { text: "Dashboard", path: "/dashboard", icon: <DashboardIcon /> },
+    { text: "My Orders", path: "my-orders", icon: <ShoppingCartIcon /> },
+    { text: "Payment History", path: "order-history", icon: <HistoryIcon /> },
+    { text: "Profile", path: "/myProfile", icon: <AccountCircleIcon /> },
+  ];
+};
 
   const drawer = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -50,15 +89,7 @@ export default function DashboardLayout() {
       <Divider />
 
       <List>
-        {[
-          { text: "Dashboard", path: "/dashboard", icon: <DashboardIcon /> },
-        //   { text: "Orders", path: "/orders", icon: <ShoppingCartIcon /> },
-          { text: "My Orders", path: "my-orders", icon: <ListAltIcon /> },
-          { text: "Payment History", path: "order-history", icon: <HistoryIcon /> },
-        //   { text: "Products", path: "/products", icon: <InventoryIcon /> },
-        //   { text: "Customers", path: "/customers", icon: <PeopleIcon /> },
-          { text: "Profile", path: "/myProfile", icon: <AccountCircleIcon /> }
-        ].map((item) => (
+        {menuItems().map((item) => (
           <ListItem
             key={item.text}
             disablePadding>
@@ -174,20 +205,20 @@ export default function DashboardLayout() {
           mt: 8,
           width: "100%",
         }}>
-        <Typography
+        {/* <Typography
           variant="h4"
           sx={{ mb: 2 }}>
           Welcome Back 👋
-        </Typography>
+        </Typography> */}
 
-        <Typography sx={{ mb: 3, maxWidth: 800 }}>
+        {/* <Typography sx={{ mb: 3, maxWidth: 800 }}>
           This area is fully responsive. Add your dashboard charts, cards,
           analytics, tables, and pages here. The layout adjusts beautifully for
           mobiles, tablets, and desktops.
-        </Typography>
+        </Typography> */}
 
         {/* Example content box */}
-        <Box
+        {/* <Box
           sx={{
             bgcolor: "#fff",
             p: 3,
@@ -198,7 +229,7 @@ export default function DashboardLayout() {
           <Typography>
             Replace this box with your real dashboard widgets.
           </Typography>
-        </Box>
+        </Box> */}
         <Outlet />
       </Box>
     </Box>

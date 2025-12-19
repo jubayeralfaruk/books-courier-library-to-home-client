@@ -15,6 +15,14 @@ import PaymentSuccess from "../pages/dashboard/Payment/PaymentSuccess";
 import PaymentCancelled from "../pages/dashboard/Payment/PaymentCancelled";
 import PaymentHistory from "../pages/dashboard/PaymentHistory";
 import SellerAccount from "../pages/Seller/SellerAccount";
+import ApproveSeller from "../pages/dashboard/ApproveSeller";
+import UserManagement from "../pages/dashboard/admin/UserManagement";
+import AdminRoute from "./AdminRoute";
+import SellerOrderManagement from "../pages/dashboard/seller/SellerOrderManagement";
+import AddBook from "../pages/dashboard/seller/AddBook";
+import MyBooks from "../pages/dashboard/seller/MyBooks";
+import EditBook from "../pages/dashboard/seller/EditBook";
+import ManageBooks from "../pages/dashboard/admin/ManageBooks";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +82,22 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
+        path: "add-book",
+        element: <AddBook></AddBook>
+      },
+      {
+        path: "my-books",
+        element: <MyBooks></MyBooks>
+      },
+      {
+        path: "edit-book/:id",
+        element: <EditBook></EditBook>
+      },
+      {
+        path: "order-management",
+        element: <SellerOrderManagement></SellerOrderManagement>, 
+      },
+      {
         path: "my-orders",
         Component: MyOrders,
       },
@@ -97,6 +121,19 @@ export const router = createBrowserRouter([
         path: "payment-cancelled",
         Component: PaymentCancelled,
       },
+      {
+        path: "approve-seller",
+        element: <AdminRoute><ApproveSeller></ApproveSeller></AdminRoute>
+      },
+      {
+        path: "users-management",
+        element: <AdminRoute><UserManagement></UserManagement></AdminRoute>,
+        // Component: UserManagement,
+      },
+      {
+        path: "manage-books",
+        element: <AdminRoute><ManageBooks></ManageBooks></AdminRoute>
+      }
     ],
   },
 ]);
