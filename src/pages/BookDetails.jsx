@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export default function BookDetails() {
   const { user } = useAuth();
@@ -24,6 +26,55 @@ export default function BookDetails() {
     },
   });
 
+  const { data: wishlist = [], refetch: refetchWishlist } = useQuery({
+    queryKey: ["wishlist", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/wishlist?email=${user.email}`);
+      return res.data;
+    },
+  });
+
+  const wishlistIds = wishlist.map((item) => item.bookId);
+  const isWishlisted = wishlistIds.includes(book._id);
+
+  const handleWishlistToggle = async () => {
+    if (!user) {
+      toast.error("Please login first");
+      return;
+    }
+
+    try {
+      if (!isWishlisted) {
+        // ➕ ADD
+        await axiosSecure.post("/wishlist", {
+          user_email: user.email,
+          bookId: book._id,
+          title: book.title,
+          image: book.image,
+          price: book.price,
+          sortDescription: book.sortDescription,
+        });
+
+        toast.success("Added to wishlist");
+      } else {
+        // ➖ REMOVE (correct way)
+        await axiosSecure.delete("/wishlist", {
+          data: {
+            user_email: user.email,
+            bookId: book._id,
+          },
+        });
+
+        toast.info("Removed from wishlist");
+      }
+
+      refetchWishlist(); // 🔁 sync UI
+    } catch (error) {
+      toast.error("Wishlist action failed");
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -37,11 +88,12 @@ export default function BookDetails() {
     await axiosSecure
       .post("/orders", {
         ...data,
-        name: user.displayName,
-        email: user.email,
+        user_name: user.displayName,
+        user_email: user.email,
         bookTitle: book.title,
         bookImage: book.image,
-        bookId: id,
+        bookId: book._id,
+        seller_email: book.seller_email,
         status: "pending",
         paymentStatus: "unpaid",
       })
@@ -65,72 +117,91 @@ export default function BookDetails() {
   if (isLoading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 py-12 px-6 md:px-16">
+    <div className="min-h-screen py-12 px-6 md:px-16">
       {/* Main Card */}
       <div
-        className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden grid md:grid-cols-2 gap-0 border border-gray-100"
+        className="max-w-6xl mx-auto rounded-3xl p-4 shadow-gray-900 shadow-2xl overflow-hidden border border-gray-900"
         data-aos="fade-up">
-        {/* Left Image */}
-        <div
-          className="relative"
-          data-aos="fade-right">
-          <img
-            src={book.image}
-            alt={book.title}
-            className="w-full h-full object-cover md:h-[520px]"
-          />
-          <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-xl px-3 py-1 rounded-full text-sm font-medium shadow-md">
-            New Release
+        <div className="grid md:grid-cols-2 gap-2">
+          {/* Left Image */}
+          <div
+            className="relative border border-gray-800 p-2 rounded-3xl"
+            data-aos="fade-right">
+            <img
+              src={book.image}
+              alt={book.title}
+              className="w-full h-full object-contain rounded-3xl md:h-[520px]"
+            />
+            <div className="absolute top-4 bg-gray-600 left-4 backdrop-blur-xl px-3 py-1 rounded-full text-sm font-medium shadow-md">
+              {book.status}
+            </div>
+          </div>
+
+          {/* Right Content */}
+          <div
+            className="p-10 flex flex-col justify-center"
+            data-aos="fade-left">
+            <h1 className="text-4xl font-extrabold text-gray-300 leading-tight mb-3">
+              {book.title}
+            </h1>
+
+            <p className="text-gray-400 text-sm mb-4">
+              Author:{" "}
+              <span className="text-gray-700 font-medium">{book.author}</span>
+            </p>
+
+            <p className="text-lg text-gray-700 mb-3 border-l-4 border-blue-600 pl-3">
+              {book.sortDescription}
+            </p>
+
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-yellow-500 text-2xl">⭐</span>
+              <span className="text-gray-800 font-semibold text-lg">
+                {book.rating} / 5.0
+              </span>
+            </div>
+
+            <p className="text-4xl font-bold text-blue-700 mb-6 drop-shadow-sm">
+              ৳ {book.price}
+            </p>
+
+            {/* Buttons */}
+            <div className="flex gap-4 mt-4">
+              <button
+                onClick={() => {
+                  user ? setOpen(true) : navigate("/login");
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-semibold shadow-lg transition transform hover:scale-105"
+                data-aos="zoom-in">
+                Order Now
+              </button>
+
+              <button
+                onClick={handleWishlistToggle}
+                className="border border-blue-600 text-blue-700 px-6 py-3 rounded-2xl font-semibold hover:bg-blue-50 transition flex items-center gap-2"
+                data-aos="zoom-in">
+                {isWishlisted ? (
+                  <>
+                    <FavoriteIcon className="text-pink-500" />
+                    Remove Wishlist
+                  </>
+                ) : (
+                  <>
+                    <FavoriteBorderIcon />
+                    Add Wishlist
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Right Content */}
-        <div
-          className="p-10 flex flex-col justify-center"
-          data-aos="fade-left">
-          <h1 className="text-4xl font-extrabold text-gray-800 leading-tight mb-3">
-            {book.title}
-          </h1>
-
-          <p className="text-gray-500 text-sm mb-4">
-            Author:{" "}
-            <span className="text-gray-700 font-medium">{book.author}</span>
+        <div className="mt-0 md:mt-10">
+          <p className="text-[min(5vh,20px)], font-semibold">
+            Book Description:
           </p>
-
-          <p className="text-lg text-gray-700 mb-3 border-l-4 border-blue-600 pl-3">
-            {book.sortDescription}
-          </p>
-
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-yellow-500 text-2xl">⭐</span>
-            <span className="text-gray-800 font-semibold text-lg">
-              {book.rating} / 5.0
-            </span>
-          </div>
-
           <p className="text-gray-600 leading-relaxed mb-6 text-justify">
             {book.description}
           </p>
-
-          <p className="text-4xl font-bold text-blue-700 mb-6 drop-shadow-sm">
-            ৳ {book.price}
-          </p>
-
-          {/* Buttons */}
-          <div className="flex gap-4 mt-4">
-            <button
-              onClick={() => setOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-semibold shadow-lg transition transform hover:scale-105"
-              data-aos="zoom-in">
-              Order Now
-            </button>
-
-            <button
-              className="border border-blue-600 text-blue-700 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-50 transition"
-              data-aos="zoom-in">
-              Add to Wishlist
-            </button>
-          </div>
         </div>
       </div>
 

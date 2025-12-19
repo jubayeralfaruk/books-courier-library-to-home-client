@@ -23,6 +23,7 @@ import AddBook from "../pages/dashboard/seller/AddBook";
 import MyBooks from "../pages/dashboard/seller/MyBooks";
 import EditBook from "../pages/dashboard/seller/EditBook";
 import ManageBooks from "../pages/dashboard/admin/ManageBooks";
+import Dashboard from "../pages/dashboard/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        index: true,
+        element: <Dashboard></Dashboard>
+      },
       {
         path: "add-book",
         element: <AddBook></AddBook>

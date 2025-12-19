@@ -12,9 +12,9 @@ export default function MyOrdersTailwind() {
   const navigate = useNavigate();
 
   const { data: orders = [], refetch: refetchOrders } = useQuery({
-    queryKey: ["my-orders", user?.email],
+    queryKey: ["orders", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/orders?email=${user.email}`);
+      const res = await axiosSecure.get(`/orders?user_email=${user.email}`);
       return res.data;
     },
   });
@@ -71,9 +71,9 @@ export default function MyOrdersTailwind() {
       <h1 className="text-3xl font-bold mb-6">My Orders</h1>
 
       {/* Desktop Table */}
-      <div className="hidden md:block overflow-x-auto bg-white rounded-xl shadow-lg">
+      <div className="hidden md:block overflow-x-auto rounded-xl shadow-lg">
         <table className="table w-full">
-          <thead className="bg-gray-100">
+          <thead className="">
             <tr className="text-gray-700 text-sm">
               <th className="font-semibold">Book</th>
               <th className="font-semibold">Details</th>
