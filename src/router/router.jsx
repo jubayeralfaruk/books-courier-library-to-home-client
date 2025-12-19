@@ -24,6 +24,9 @@ import MyBooks from "../pages/dashboard/seller/MyBooks";
 import EditBook from "../pages/dashboard/seller/EditBook";
 import ManageBooks from "../pages/dashboard/admin/ManageBooks";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Coverage from "../pages/Coverage";
+import About from "../pages/About";
+import Contact from "../pages/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +46,10 @@ export const router = createBrowserRouter([
         Component: BookDetails,
       },
       {
+        path: "coverage",
+        Component: Coverage
+      },
+      {
         path: "create-seller-account",
         element: <PrivateRoute><SellerAccount /></PrivateRoute>
       },
@@ -54,6 +61,14 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "about",
+        Component: About,
+      },
+      {
+        path: "contact",
+        Component: Contact,
+      }
     ],
   },
   {

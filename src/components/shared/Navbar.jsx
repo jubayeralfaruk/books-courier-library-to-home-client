@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
 import useRole from "../../hooks/useRole";
+import { BookOpen } from "lucide-react";
 
 const Navbar = () => {
   const { user, signOutUser } = use(AuthContext);
@@ -44,9 +45,11 @@ const Navbar = () => {
         </>
       )}
       <li className="nav-btn">
+        <NavLink to="/coverage">Coverage</NavLink>
+      </li>
+      <li className="nav-btn">
         <NavLink to="/about">About Us</NavLink>
       </li>
-
       <li className="nav-btn">
         <NavLink to="/contact">Contact</NavLink>
       </li>
@@ -86,8 +89,8 @@ const Navbar = () => {
 
         <Link
           to="/"
-          className="text-2xl font-bold">
-          Books<span className="p-0 text-primary">Courier</span>
+          className="text-2xl font-bold flex items-center justify-center">
+          <BookOpen className="mr-1 mt-1.5" /> Books<span className="p-0 text-primary">Courier</span>
         </Link>
       </div>
 
