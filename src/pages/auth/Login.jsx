@@ -2,17 +2,20 @@ import React, { useEffect, useState } from "react";
 import SignInGoogle from "./SignInGoogle";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   useEffect(() => {
     AOS.init({ duration: 1000, once: true, mirror: false });
   }, []);
   const [load, setLoad] = useState(false);
-  const { login, loading } = useAuth();
+  const { login, user, loading } = useAuth();
   const {
     register,
     handleSubmit,
@@ -27,6 +30,7 @@ const Login = () => {
         setLoad(false);
         toast.success("Login Successful..");
         reset();
+        navigate(from, {relative: true})
       })
       .catch((err) => {
         console.log(err);
@@ -34,6 +38,10 @@ const Login = () => {
         toast.error("Login Failed. Please try again.");
       });
   };
+
+  if (user) {
+    navigate(from, { replace: true });
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
@@ -121,6 +129,7 @@ const Login = () => {
           Don't have an account?{" "}
           <Link
             to="/register"
+            state={{ from: location }} replace
             className="text-blue-400 hover:underline">
             Register
           </Link>

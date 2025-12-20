@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import UseAxiosSecure from "../../hooks/useAxiosSecure";
+import { useLocation, useNavigate } from "react-router";
 
 const SignInGoogle = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const axiosSecure = UseAxiosSecure();
   const [load, setLoad] = useState(false);
   const { signInGoogle, loading } = useAuth();
@@ -14,6 +18,7 @@ const SignInGoogle = () => {
         const loggedUser = result.user;
         console.log(loggedUser);
         toast.success("Google Sign In Successful");
+        navigate(from, { replace: true });
         const userInfo = {
           displayName: loggedUser.displayName,
           email: loggedUser.email,

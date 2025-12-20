@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import SignInGoogle from "./SignInGoogle";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,9 @@ import { toast } from "react-toastify";
 import UseAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const axiosSecure = UseAxiosSecure();
   useEffect(() => {
     AOS.init({ duration: 1000, once: true, mirror: false });
@@ -62,6 +65,7 @@ const Register = () => {
               .then((result) => {
                 console.log(result);
                 toast.success("User Create Successful..!");
+                navigate(from, { replace: true });
                 setLoad(false);
                 reset();
               })
@@ -74,6 +78,10 @@ const Register = () => {
         setLoad(false);
       });
   };
+
+  if (user) {
+    navigate(from, { replace: true });
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
@@ -216,6 +224,7 @@ const Register = () => {
           Already have an account?{" "}
           <Link
             to="/login"
+            state={{ from: location }} replace
             className="text-blue-400 hover:underline">
             Login
           </Link>
