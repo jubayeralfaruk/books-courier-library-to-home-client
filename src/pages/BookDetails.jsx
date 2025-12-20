@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookReview from "../components/BookReview";
+import GlobalError from "./ErrorPage/GlobalError";
 
 export default function BookDetails() {
   const { user } = useAuth();
@@ -116,6 +117,8 @@ export default function BookDetails() {
   }, []);
 
   if (isLoading) return <p className="text-center py-10">Loading...</p>;
+  if (book._id !== id) return <GlobalError></GlobalError>;
+  
 
   return (
     <div className="min-h-screen py-12 px-6 md:px-16">
