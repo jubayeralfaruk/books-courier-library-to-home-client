@@ -9,6 +9,7 @@ import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import BookReview from "../components/BookReview";
 
 export default function BookDetails() {
   const { user } = useAuth();
@@ -285,9 +286,10 @@ export default function BookDetails() {
         </div>
       )}
 
+        <BookReview bookId={id}></BookReview>
       {/* Extra Section */}
       <div className="max-w-6xl mx-auto mt-14 grid md:grid-cols-3 gap-8">
-        <div
+        {/* <div
           className="bg-white p-6 rounded-2xl shadow-md border border-gray-100"
           data-aos="fade-up">
           <h3 className="font-bold text-xl mb-2">📦 Fast Delivery</h3>
@@ -314,7 +316,7 @@ export default function BookDetails() {
           <p className="text-gray-600">
             All books are original print with excellent page quality.
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

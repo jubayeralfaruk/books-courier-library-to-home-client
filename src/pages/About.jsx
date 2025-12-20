@@ -45,7 +45,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white py-16 px-6">
+      {/* <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white py-16 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center mb-4">
             <BookOpen className="w-16 h-16 mr-4" />
@@ -53,7 +53,7 @@ export default function About() {
           </div>
           <p className="text-xl md:text-2xl">Your Library at Your Doorstep</p>
         </div>
-      </div>
+      </div> */}
 
       {/* About Section */}
       <section className="px-6 py-16">
@@ -77,7 +77,7 @@ export default function About() {
           </div>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {features.map((feature, index) => (
               <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 text-center">
                 <div className="text-amber-600 flex justify-center mb-4">
@@ -87,10 +87,10 @@ export default function About() {
                 <p className="text-gray-600">{feature.description}</p>
               </div>
             ))}
-          </div>
+          </div> */}
 
           {/* Stats */}
-          <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-3xl shadow-xl p-8 md:p-12 mb-12">
+          {/* <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-3xl shadow-xl p-8 md:p-12 mb-12">
             <h3 className="text-3xl font-bold text-white text-center mb-8">Our Impact</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, index) => (
@@ -100,10 +100,10 @@ export default function About() {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* How It Works */}
-          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+          {/* <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
             <h3 className="text-3xl font-bold text-gray-800 mb-8 text-center">How It Works</h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
@@ -128,7 +128,7 @@ export default function About() {
                 <p className="text-gray-600">Receive your books at your doorstep within 24-48 hours</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>      
     </div>

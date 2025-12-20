@@ -27,6 +27,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import Coverage from "../pages/Coverage";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
+import Review from "../pages/dashboard/Review";
 
 export const router = createBrowserRouter([
   {
@@ -104,6 +105,10 @@ export const router = createBrowserRouter([
       {
         path: "add-book",
         element: <AddBook></AddBook>
+      },
+      {
+        path: 'book-review/:id',
+        element: <Review></Review>
       },
       {
         path: "my-books",

@@ -15,7 +15,7 @@ const LatestBooks = () => {
     queryKey: ["latest-books"],
     queryFn: async () => {
       const res = await axiosSecure.get(
-        "/books?limit=8&sort=latest"
+        "/books?limit=4&sort=latest"
       );
       return res.data.books; // ✅ FIX
     },
@@ -50,7 +50,7 @@ const LatestBooks = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {(isLoading || isFetching) &&
-          [...Array(8)].map((_, i) => <BookSkeleton key={i} />)}
+          [...Array(4)].map((_, i) => <BookSkeleton key={i} />)}
           {books.map((book) => (
                     <motion.div
                       key={book._id}

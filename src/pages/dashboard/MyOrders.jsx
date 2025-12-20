@@ -22,6 +22,9 @@ export default function MyOrdersTailwind() {
   const handlePay = (orderId) => {
     navigate(`/dashboard/payment/${orderId}`);
   };
+  const handleReview = (orderId) => {
+    navigate(`/dashboard/book-review/${orderId}`);
+  };
 
   const handleCancel = (orderId) => {
     Swal.fire({
@@ -65,6 +68,20 @@ export default function MyOrdersTailwind() {
         return "badge";
     }
   };
+
+  /* ------------------ Check existing review ------------------ */
+    const { data: reviews = [] } = useQuery({
+      queryKey: ["review",],
+      queryFn: async () => {
+        const res = await axiosSecure.get(
+          `/reviews`
+        );
+        return res.data; // backend should return array
+      },
+    });
+
+    const reviewsWithOrderId  = reviews.map((review) => review.orderId)
+
 
   return (
     <div className="p-6 w-full">
@@ -139,6 +156,21 @@ export default function MyOrdersTailwind() {
                           </button>
                         )}
                       </div>
+                    ) : order.status === "delivered" ? (
+                      reviewsWithOrderId.includes(order._id)
+                      ?
+                      <button
+                        className="btn btn-xs btn-primary"
+                        disabled
+                        >
+                        Reviewed
+                      </button>
+                      :
+                      <button
+                        className="btn btn-xs btn-primary"
+                        onClick={() => handleReview(order._id)}>
+                        Review
+                      </button>
                     ) : (
                       <span>—</span>
                     )}
@@ -155,7 +187,7 @@ export default function MyOrdersTailwind() {
         {orders.map((order) => (
           <div
             key={order._id}
-            className="card bg-white shadow-lg rounded-xl p-4">
+            className="card bg-gray-800 shadow-lg rounded-xl p-4">
             <h2 className="font-semibold text-lg">
               {order.bookTitle || order.bookId}
             </h2>
@@ -176,22 +208,39 @@ export default function MyOrdersTailwind() {
               </span>
             </div>
             <div className="flex gap-2 mt-3">
-              {order.status === "pending" && (
-                <>
-                  <button
-                    className="btn btn-xs btn-error"
-                    onClick={() => handleCancel(order._id)}>
-                    Cancel
-                  </button>
-                  {order.paymentStatus !== "paid" && (
-                    <button
-                      className="btn btn-xs btn-primary"
-                      onClick={() => handlePay(order._id)}>
-                      Pay Now
-                    </button>
-                  )}
-                </>
-              )}
+              {order.status === "pending" ? (
+                      <div className="flex gap-2">
+                        <button
+                          className="btn btn-xs btn-error"
+                          onClick={() => handleCancel(order._id)}>
+                          Cancel
+                        </button>
+                        {order.paymentStatus !== "paid" && (
+                          <button
+                            className="btn btn-xs btn-primary"
+                            onClick={() => handlePay(order._id)}>
+                            Pay Now
+                          </button>
+                        )}
+                      </div>
+                    ) : order.status === "delivered" ? (
+                      reviewsWithOrderId.includes(order._id)
+                      ?
+                      <button
+                        className="btn btn-xs btn-primary"
+                        disabled
+                        >
+                        Reviewed
+                      </button>
+                      :
+                      <button
+                        className="btn btn-xs btn-primary"
+                        onClick={() => handleReview(order._id)}>
+                        Review
+                      </button>
+                    ) : (
+                      <span>—</span>
+                    )}
               <Link
                 to={`/books/${order.bookId}`}
                 className="btn btn-xs btn-outline">

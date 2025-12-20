@@ -9,9 +9,6 @@ import {
   Home,
   Clock,
   ShoppingCart,
-  Users,
-  Award,
-  Package,
 } from "lucide-react";
 
 const Contact = () => {
@@ -36,7 +33,6 @@ const Contact = () => {
       formData.name &&
       formData.email &&
       formData.phone &&
-      formData.subject &&
       formData.message
     ) {
       setSubmitted(true);
@@ -192,7 +188,7 @@ const Contact = () => {
                     className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors duration-300"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <input
                     type="text"
                     name="subject"
@@ -201,7 +197,7 @@ const Contact = () => {
                     placeholder="Subject *"
                     className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors duration-300"
                   />
-                </div>
+                </div> */}
                 <div>
                   <textarea
                     name="message"
