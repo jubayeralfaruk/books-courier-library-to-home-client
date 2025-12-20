@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import { getAuth, signOut } from "firebase/auth";
 import useRole from "../hooks/useRole";
@@ -18,6 +18,7 @@ import {
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const sidebarRef = useRef();
 
   const { role } = useRole();
   const navigate = useNavigate();
@@ -43,11 +44,7 @@ export default function DashboardLayout() {
         { text: "Dashboard", path: "/dashboard", icon: <FiHome /> },
         { text: "Add Book", path: "add-book", icon: <FiPlus /> },
         { text: "My Books", path: "my-books", icon: <FiBook /> },
-        {
-          text: "Order Management",
-          path: "order-management",
-          icon: <FiClipboard />,
-        },
+        { text: "Order Management", path: "order-management", icon: <FiClipboard /> },
         { text: "My Orders", path: "my-orders", icon: <FiShoppingCart /> },
         { text: "Payment History", path: "order-history", icon: <FiList /> },
       ];
@@ -59,20 +56,36 @@ export default function DashboardLayout() {
     ];
   };
 
+  // Close sidebar on click outside (mobile)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setSidebarOpen(false);
+      }
+    };
+    if (sidebarOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [sidebarOpen]);
+
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="flex h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
         {/* Sidebar */}
         <div
+          ref={sidebarRef}
           className={`fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform md:translate-x-0 md:static md:inset-0 z-30`}>
           <div className="flex flex-col h-full justify-between">
             <div>
               <div className="flex items-center justify-center h-16 text-2xl font-bold border-b border-gray-200 dark:border-gray-700">
-                <Link
-                  to="/"
-                  className="text-2xl font-bold">
+                <Link to="/" className="text-2xl font-bold">
                   Books<span className="p-0 text-primary">Courier</span>
                 </Link>
               </div>
@@ -81,6 +94,7 @@ export default function DashboardLayout() {
                   <li key={item.text}>
                     <Link
                       to={item.path}
+                      onClick={() => setSidebarOpen(false)} // close on mobile
                       className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
                       {item.icon}
                       {item.text}
@@ -94,6 +108,7 @@ export default function DashboardLayout() {
             <div className="p-4 border-t border-gray-200 dark:border-gray-700">
               <Link
                 to="/myProfile"
+                onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 mb-2">
                 <FiUser />
                 Profile
@@ -118,7 +133,7 @@ export default function DashboardLayout() {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col ">
+        <div className="flex-1 flex flex-col">
           {/* Top navbar */}
           <div className="flex items-center justify-between bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 px-4">
             <button
@@ -131,7 +146,6 @@ export default function DashboardLayout() {
 
           {/* Dashboard content */}
           <main className="flex-1 p-4 overflow-auto space-y-6">
-            {/* Outlet for nested pages */}
             <Outlet />
           </main>
         </div>
