@@ -53,7 +53,7 @@ export default function UserManagement() {
         timer: 1200,
         showConfirmButton: false,
       });
-      refetch()
+      refetch();
     },
   });
 
@@ -74,18 +74,18 @@ export default function UserManagement() {
   });
 
   /* -------------------- LOADING -------------------- */
-  if (isLoading) {
-    return (
-      <div className="p-4">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
-          />
-        ))}
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="p-4">
+  //       {[...Array(5)].map((_, i) => (
+  //         <div
+  //           key={i}
+  //           className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+  //         />
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -106,7 +106,6 @@ export default function UserManagement() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <p>{search}</p>
 
       {/* -------------------- DESKTOP TABLE -------------------- */}
       <div className="overflow-x-auto hidden md:block">
@@ -122,73 +121,93 @@ export default function UserManagement() {
             </tr>
           </thead>
 
-          <tbody className="[&>tr>td]:bg-transparent">
-            {users.map((user, idx) => (
-              <tr
-                className="shadow-sm"
-                key={user._id}>
-                <td>{idx + 1}</td>
-                <td className="font-semibold">{user.displayName}</td>
-                <td>{user.email}</td>
+          {isLoading ? (
+            <tbody>
+              <td colSpan={6}>
+                <div className="p-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+                    />
+                  ))}
+                </div>
+              </td>
+            </tbody>
+          ) : (
+            <tbody className="[&>tr>td]:bg-transparent">
+              {users.map((user, idx) => (
+                <tr
+                  className="shadow-sm"
+                  key={user._id}>
+                  <td>{idx + 1}</td>
+                  <td className="font-semibold">{user.displayName}</td>
+                  <td>{user.email}</td>
 
-                <td>
-                  <span className="badge badge-primary">
-                    {user.role || "user"}
-                  </span>
-                </td>
+                  <td>
+                    <span className="badge badge-primary">
+                      {user.role || "user"}
+                    </span>
+                  </td>
 
-                <td>
-                  <select
-                    className="select select-sm bg-gray-800 text-white border border-gray-300"
-                    defaultValue={user.role || "user"}
-                    onChange={(e) =>
-                      Swal.fire({
-                        title: "Change Role?",
-                        text: "Are you sure you want to update this user's role?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: "Yes, update",
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          updateRoleMutation.mutate({
-                            id: user._id,
-                            role: e.target.value,
-                          });
-                        }
-                      })
-                    }>
-                    <option value="user">User</option>
-                    <option value="seller">Seller</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </td>
+                  <td>
+                    <select
+                      className="select select-sm bg-gray-800 text-white border border-gray-300"
+                      defaultValue={user.role || "user"}
+                      onChange={(e) =>
+                        Swal.fire({
+                          title: "Change Role?",
+                          text: "Are you sure you want to update this user's role?",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonText: "Yes, update",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            updateRoleMutation.mutate({
+                              id: user._id,
+                              role: e.target.value,
+                            });
+                          }
+                        })
+                      }>
+                      <option value="user">User</option>
+                      <option value="seller">Seller</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
 
-                <td>
-                  <button
-                    className="btn btn-error btn-sm"
-                    onClick={() =>
-                      Swal.fire({
-                        title: "Are you sure?",
-                        text: "User will be permanently removed!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: "Delete",
-                      }).then((res) => {
-                        if (res.isConfirmed) {
-                          deleteMutation.mutate(user._id);
-                        }
-                      })
-                    }>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                  <td>
+                    <button
+                      className="btn btn-error btn-sm"
+                      onClick={() =>
+                        Swal.fire({
+                          title: "Are you sure?",
+                          text: "User will be permanently removed!",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonText: "Delete",
+                        }).then((res) => {
+                          if (res.isConfirmed) {
+                            deleteMutation.mutate(user._id);
+                          }
+                        })
+                      }>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
 
       {/* -------------------- MOBILE VIEW -------------------- */}
+      {isLoading && (
+        <div className="md:hidden text-center py-20">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      )}
       <div className="grid gap-4 md:hidden">
         {users.map((user) => (
           <div
@@ -248,7 +267,15 @@ export default function UserManagement() {
             </button>
           </div>
         ))}
+
       </div>
+        {
+          users.length === 0 && (
+            <div className="">
+              <h2 className="text-xl text-gray-600 mt-10 text-center">User Not Found</h2>
+            </div>
+          )
+        }
     </div>
   );
 }

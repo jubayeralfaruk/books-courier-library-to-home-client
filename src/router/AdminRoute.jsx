@@ -7,7 +7,14 @@ const AdminRoute = ({children}) => {
     const {role, roleLoading} = useRole();
 
     if (loading || roleLoading) {
-        return <p>loading</p>
+        return <div className="p-4">
+              {[...Array(7)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+                />
+              ))}
+            </div>
     }
     if (loading || roleLoading) {
     return (

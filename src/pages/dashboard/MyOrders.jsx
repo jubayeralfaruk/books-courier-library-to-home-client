@@ -11,7 +11,11 @@ export default function MyOrdersTailwind() {
   const [order, setOrders] = useState([]);
   const navigate = useNavigate();
 
-  const { data: orders = [], refetch: refetchOrders } = useQuery({
+  const {
+    data: orders = [],
+    isLoading,
+    refetch: refetchOrders,
+  } = useQuery({
     queryKey: ["orders", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/orders?user_email=${user.email}`);
@@ -70,17 +74,15 @@ export default function MyOrdersTailwind() {
   };
 
   /* ------------------ Check existing review ------------------ */
-    const { data: reviews = [] } = useQuery({
-      queryKey: ["review",],
-      queryFn: async () => {
-        const res = await axiosSecure.get(
-          `/reviews`
-        );
-        return res.data; // backend should return array
-      },
-    });
+  const { data: reviews = [] } = useQuery({
+    queryKey: ["review"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/reviews`);
+      return res.data; // backend should return array
+    },
+  });
 
-    const reviewsWithOrderId  = reviews.map((review) => review.orderId)
+  const reviewsWithOrderId = reviews.map((review) => review.orderId);
 
 
   return (
@@ -100,15 +102,19 @@ export default function MyOrdersTailwind() {
               <th className="font-semibold">Action</th>
             </tr>
           </thead>
-          {orders.length === 0 ? (
+
+          {isLoading ? (
             <tbody>
-              <tr>
-                <td
-                  colSpan="6"
-                  className="text-center p-6 text-gray-500">
-                  No orders found.
-                </td>
-              </tr>
+              <td colSpan={6}>
+                <div className="p-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+                    />
+                  ))}
+                </div>
+              </td>
             </tbody>
           ) : (
             <tbody>
@@ -157,20 +163,19 @@ export default function MyOrdersTailwind() {
                         )}
                       </div>
                     ) : order.status === "delivered" ? (
-                      reviewsWithOrderId.includes(order._id)
-                      ?
-                      <button
-                        className="btn btn-xs btn-primary"
-                        disabled
-                        >
-                        Reviewed
-                      </button>
-                      :
-                      <button
-                        className="btn btn-xs btn-primary"
-                        onClick={() => handleReview(order._id)}>
-                        Review
-                      </button>
+                      reviewsWithOrderId.includes(order._id) ? (
+                        <button
+                          className="btn btn-xs btn-primary"
+                          disabled>
+                          Reviewed
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-xs btn-primary"
+                          onClick={() => handleReview(order._id)}>
+                          Review
+                        </button>
+                      )
                     ) : (
                       <span>—</span>
                     )}
@@ -183,6 +188,11 @@ export default function MyOrdersTailwind() {
       </div>
 
       {/* Mobile Card View */}
+      {isLoading && (
+        <div className="md:hidden text-center py-20">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      )}
       <div className="md:hidden grid grid-cols-1 gap-4">
         {orders.map((order) => (
           <div
@@ -209,38 +219,37 @@ export default function MyOrdersTailwind() {
             </div>
             <div className="flex gap-2 mt-3">
               {order.status === "pending" ? (
-                      <div className="flex gap-2">
-                        <button
-                          className="btn btn-xs btn-error"
-                          onClick={() => handleCancel(order._id)}>
-                          Cancel
-                        </button>
-                        {order.paymentStatus !== "paid" && (
-                          <button
-                            className="btn btn-xs btn-primary"
-                            onClick={() => handlePay(order._id)}>
-                            Pay Now
-                          </button>
-                        )}
-                      </div>
-                    ) : order.status === "delivered" ? (
-                      reviewsWithOrderId.includes(order._id)
-                      ?
-                      <button
-                        className="btn btn-xs btn-primary"
-                        disabled
-                        >
-                        Reviewed
-                      </button>
-                      :
-                      <button
-                        className="btn btn-xs btn-primary"
-                        onClick={() => handleReview(order._id)}>
-                        Review
-                      </button>
-                    ) : (
-                      <span>—</span>
-                    )}
+                <div className="flex gap-2">
+                  <button
+                    className="btn btn-xs btn-error"
+                    onClick={() => handleCancel(order._id)}>
+                    Cancel
+                  </button>
+                  {order.paymentStatus !== "paid" && (
+                    <button
+                      className="btn btn-xs btn-primary"
+                      onClick={() => handlePay(order._id)}>
+                      Pay Now
+                    </button>
+                  )}
+                </div>
+              ) : order.status === "delivered" ? (
+                reviewsWithOrderId.includes(order._id) ? (
+                  <button
+                    className="btn btn-xs btn-primary"
+                    disabled>
+                    Reviewed
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-xs btn-primary"
+                    onClick={() => handleReview(order._id)}>
+                    Review
+                  </button>
+                )
+              ) : (
+                <span>—</span>
+              )}
               <Link
                 to={`/books/${order.bookId}`}
                 className="btn btn-xs btn-outline">
@@ -250,6 +259,11 @@ export default function MyOrdersTailwind() {
           </div>
         ))}
       </div>
+      {orders.length === 0 && !isLoading && (
+        <p className="text-center py-10 text-gray-400">
+          No orders found
+        </p>
+      )}
     </div>
   );
 }

@@ -69,9 +69,9 @@ export default function ManageBooks() {
     });
   };
 
-  if (isLoading) {
-    return <p className="text-center mt-10">Loading books...</p>;
-  }
+  // if (isLoading) {
+  //   return <p className="text-center mt-10">Loading books...</p>;
+  // }
 
   return (
     <div className="p-6 bg-base-100 rounded-xl shadow">
@@ -90,54 +90,72 @@ export default function ManageBooks() {
               <th>Actions</th>
             </tr>
           </thead>
+          {isLoading ? (
+            <tbody>
+              <td colSpan={6}>
+                <div className="p-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+                    />
+                  ))}
+                </div>
+              </td>
+            </tbody>
+          ) : (
+            <tbody>
+              {books.map((book, index) => (
+                <tr
+                  key={book._id}
+                  className="text-white">
+                  <td>{index + 1}</td>
 
-          <tbody>
-            {books.map((book, index) => (
-              <tr
-                key={book._id}
-                className="text-white">
-                <td>{index + 1}</td>
+                  <td className="flex items-center gap-3">
+                    <img
+                      src={book.image}
+                      alt={book.title}
+                      className="w-12 h-16 rounded"
+                    />
+                    <Link
+                      to={`/books/${book._id}`}
+                      className="font-medium">
+                      {book.title}
+                    </Link>
+                  </td>
 
-                <td className="flex items-center gap-3">
-                  <img
-                    src={book.image}
-                    alt={book.title}
-                    className="w-12 h-16 rounded"
-                  />
-                  <Link to={`/books/${book._id}`} className="font-medium">{book.title}</Link>
-                </td>
+                  <td>{book.author}</td>
+                  <td>{book.seller_email}</td>
+                  <td>${book.price}</td>
 
-                <td>{book.author}</td>
-                <td>{book.seller_email}</td>
-                <td>${book.price}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        book.status === "published"
+                          ? "badge-success"
+                          : "badge-warning"
+                      }`}>
+                      {book.status}
+                    </span>
+                  </td>
 
-                <td>
-                  <span
-                    className={`badge ${
-                      book.status === "published"
-                        ? "badge-success"
-                        : "badge-warning"
-                    }`}>
-                    {book.status}
-                  </span>
-                </td>
+                  <td className="space-x-2">
+                    <button
+                      className="btn btn-xs btn-info"
+                      onClick={() => handleStatusChange(book._id, book.status)}>
+                      {book.status === "published" ? "Unpublish" : "Publish"}
+                    </button>
 
-                <td className="space-x-2">
-                  <button
-                    className="btn btn-xs btn-info"
-                    onClick={() => handleStatusChange(book._id, book.status)}>
-                    {book.status === "published" ? "Unpublish" : "Publish"}
-                  </button>
-
-                  <button
-                    className="btn btn-xs btn-error"
-                    onClick={() => handleDelete(book._id)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                    <button
+                      className="btn btn-xs btn-error"
+                      onClick={() => handleDelete(book._id)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
 
         {books.length === 0 && (

@@ -57,7 +57,7 @@ export default function AddBook() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded">
+    <div className="max-w-3xl mx-auto p-6 shadow rounded">
       <h2 className="text-2xl font-semibold mb-6">Add New Book</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4 text-white">

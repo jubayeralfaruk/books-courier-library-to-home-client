@@ -75,8 +75,7 @@ export default function SellerOrderManagement() {
         <select
           className="select select-bordered w-full md:w-56"
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
+          onChange={(e) => setStatus(e.target.value)}>
           <option value="all">All Status</option>
           <option value="pending">Pending</option>
           <option value="shipped">Shipped</option>
@@ -85,7 +84,13 @@ export default function SellerOrderManagement() {
       </div>
 
       {isLoading && (
-        <div className="text-center py-20">
+        <div className="md:hidden text-center py-20">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="md:hidden text-center py-20">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       )}
@@ -95,8 +100,7 @@ export default function SellerOrderManagement() {
         {orders.map((order) => (
           <div
             key={order._id}
-            className="card bg-base-200 shadow-md p-4"
-          >
+            className="card bg-base-200 shadow-md p-4">
             <div className="flex gap-4">
               <img
                 src={order.bookImage}
@@ -115,8 +119,7 @@ export default function SellerOrderManagement() {
                       : order.status === "shipped"
                       ? "badge-info"
                       : "badge-success"
-                  }`}
-                >
+                  }`}>
                   {order.status}
                 </span>
               </div>
@@ -127,10 +130,7 @@ export default function SellerOrderManagement() {
                 className="select select-sm select-bordered flex-1"
                 value={order.status}
                 disabled={order.status === "delivered"}
-                onChange={(e) =>
-                  handleStatusChange(order._id, e.target.value)
-                }
-              >
+                onChange={(e) => handleStatusChange(order._id, e.target.value)}>
                 <option value="pending">Pending</option>
                 <option value="shipped">Shipped</option>
                 <option value="delivered">Delivered</option>
@@ -139,8 +139,7 @@ export default function SellerOrderManagement() {
               <button
                 className="btn btn-sm btn-error"
                 disabled={order.status === "delivered"}
-                onClick={() => handleCancel(order._id)}
-              >
+                onClick={() => handleCancel(order._id)}>
                 Cancel
               </button>
             </div>
@@ -163,71 +162,81 @@ export default function SellerOrderManagement() {
             </tr>
           </thead>
 
-          <tbody>
-            {orders.map((order, i) => (
-              <tr key={order._id}>
-                <td>{i + 1}</td>
+          {isLoading ? (
+            <tbody>
+              <td colSpan={7}>
+                <div className="p-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+                    />
+                  ))}
+                </div>
+              </td>
+            </tbody>
+          ) : (
+            <tbody>
+              {orders.map((order, i) => (
+                <tr key={order._id}>
+                  <td>{i + 1}</td>
 
-                <td className="flex gap-3 items-center">
-                  <img
-                    src={order.bookImage}
-                    className="w-12 h-14 rounded"
-                    alt=""
-                  />
-                  {order.bookTitle}
-                </td>
+                  <td className="flex gap-3 items-center">
+                    <img
+                      src={order.bookImage}
+                      className="w-12 h-14 rounded"
+                      alt=""
+                    />
+                    {order.bookTitle}
+                  </td>
 
-                <td>{order.user_email}</td>
-                <td>{order.phone}</td>
+                  <td>{order.user_email}</td>
+                  <td>{order.phone}</td>
 
-                <td>
-                  <span
-                    className={`badge ${
-                      order.status === "pending"
-                        ? "badge-warning"
-                        : order.status === "shipped"
-                        ? "badge-info"
-                        : "badge-success"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        order.status === "pending"
+                          ? "badge-warning"
+                          : order.status === "shipped"
+                          ? "badge-info"
+                          : "badge-success"
+                      }`}>
+                      {order.status}
+                    </span>
+                  </td>
 
-                <td>
-                  <select
-                    className="select select-sm select-bordered"
-                    value={order.status}
-                    disabled={order.status === "delivered"}
-                    onChange={(e) =>
-                      handleStatusChange(order._id, e.target.value)
-                    }
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                  </select>
-                </td>
+                  <td>
+                    <select
+                      className="select select-sm select-bordered"
+                      value={order.status}
+                      disabled={order.status === "delivered"}
+                      onChange={(e) =>
+                        handleStatusChange(order._id, e.target.value)
+                      }>
+                      <option value="pending">Pending</option>
+                      <option value="shipped">Shipped</option>
+                      <option value="delivered">Delivered</option>
+                    </select>
+                  </td>
 
-                <td>
-                  <button
-                    className="btn btn-sm btn-error"
-                    disabled={order.status === "delivered"}
-                    onClick={() => handleCancel(order._id)}
-                  >
-                    Cancel
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                  <td>
+                    <button
+                      className="btn btn-sm btn-error"
+                      disabled={order.status === "delivered"}
+                      onClick={() => handleCancel(order._id)}>
+                      Cancel
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
 
       {orders.length === 0 && !isLoading && (
-        <p className="text-center py-10 text-gray-400">
-          No orders found
-        </p>
+        <p className="text-center py-10 text-gray-400">No orders found</p>
       )}
     </div>
   );
