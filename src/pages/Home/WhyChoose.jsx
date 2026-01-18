@@ -17,7 +17,7 @@ const WhyChoose = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-900 text-white">
+    <section className="bg-gray-900 py-16 text-white">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-3xl font-bold mb-10">
           Why Choose BookCourier?

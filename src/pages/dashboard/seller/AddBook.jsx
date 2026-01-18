@@ -57,17 +57,17 @@ export default function AddBook() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 shadow rounded">
-      <h2 className="text-2xl font-semibold mb-6">Add New Book</h2>
+    <div className="max-w-3xl mx-auto p-6 bg-surface shadow-lg rounded-xl border border-theme">
+      <h2 className="text-2xl font-semibold mb-6 text-theme-primary">Add New Book</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4 text-white">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
           name="title"
           placeholder="Book Title"
           value={formData.title}
           onChange={handleChange}
-          className="input input-bordered w-full"
+          className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
           required
         />
 
@@ -77,7 +77,7 @@ export default function AddBook() {
           placeholder="Author Name"
           value={formData.author}
           onChange={handleChange}
-          className="input input-bordered w-full"
+          className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
         />
 
         <input
@@ -85,7 +85,7 @@ export default function AddBook() {
           name="seller_email"
           placeholder="Seller Email"
           value={user?.email}
-          className="input input-bordered w-full"
+          className="w-full px-4 py-3 bg-theme-tertiary border border-theme rounded-lg text-theme-muted cursor-not-allowed"
           readOnly
         />
 
@@ -95,7 +95,7 @@ export default function AddBook() {
           placeholder="Book Image URL"
           value={formData.image}
           onChange={handleChange}
-          className="input input-bordered w-full"
+          className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
           required
         />
 
@@ -106,7 +106,7 @@ export default function AddBook() {
             placeholder="Price"
             value={formData.price}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
             required
           />
 
@@ -117,7 +117,7 @@ export default function AddBook() {
             placeholder="Rating"
             value={formData.rating}
             onChange={handleChange}
-            className="input input-bordered w-full"
+            className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
           />
         </div>
 
@@ -125,7 +125,7 @@ export default function AddBook() {
           name="status"
           value={formData.status}
           onChange={handleChange}
-          className="select select-bordered w-full"
+          className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
         >
           <option value="published">Published</option>
           <option value="unpublished">Unpublished</option>
@@ -136,7 +136,7 @@ export default function AddBook() {
           placeholder="Short Description"
           value={formData.sortDescription}
           onChange={handleChange}
-          className="textarea textarea-bordered w-full"
+          className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
         />
 
         <textarea
@@ -144,11 +144,17 @@ export default function AddBook() {
           placeholder="Full Description"
           value={formData.description}
           onChange={handleChange}
-          className="textarea textarea-bordered w-full"
+          className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
           rows={4}
         />
 
-        <button type="submit" className="btn btn-primary w-full">
+        <button 
+          type="submit" 
+          className="w-full py-3 px-6 rounded-lg font-semibold text-white transition-colors duration-300"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
+        >
           Add Book
         </button>
       </form>

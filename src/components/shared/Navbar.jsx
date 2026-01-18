@@ -3,10 +3,12 @@ import { Link, NavLink, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
 import useRole from "../../hooks/useRole";
-import { BookOpen } from "lucide-react";
+import useTheme from "../../hooks/useTheme";
+import { BookOpen, Moon, Sun } from "lucide-react";
 
 const Navbar = () => {
   const { user, signOutUser } = use(AuthContext);
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const { role } = useRole();
 
@@ -57,14 +59,14 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-gray-900 shadow-sm sticky top-0 z-50 opacity-95">
+    <div className="navbar bg-surface shadow-lg sticky top-0 z-50 border-b border-theme">
       <div className="navbar-start">
         {/* Mobile dropdown */}
         <div className="dropdown">
           <div
             tabIndex={0}
             role="button"
-            className="btn btn-ghost lg:hidden">
+            className="btn btn-ghost lg:hidden text-theme-primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -82,15 +84,15 @@ const Navbar = () => {
 
           <ul
             tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+            className="menu menu-sm dropdown-content bg-surface rounded-box z-1 mt-3 w-52 p-2 shadow-lg border border-theme">
             {links}
           </ul>
         </div>
 
         <Link
           to="/"
-          className="text-2xl font-bold flex items-center justify-center">
-          <BookOpen className="mr-1 mt-1.5" /> Books<span className="p-0 text-primary">Courier</span>
+          className="text-2xl font-bold flex items-center justify-center text-theme-primary">
+          <BookOpen className="mr-1 mt-1.5" /> Books<span className="p-0" style={{ color: 'var(--color-primary)' }}>Courier</span>
         </Link>
       </div>
 
@@ -99,6 +101,15 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end gap-3">
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleTheme}
+          className="btn btn-ghost btn-circle text-theme-primary hover:bg-theme-secondary"
+          aria-label="Toggle theme"
+        >
+          {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+
         {user ? (
           <div className="dropdown dropdown-end">
             <div
@@ -119,12 +130,12 @@ const Navbar = () => {
 
             <ul
               tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+              className="menu menu-sm dropdown-content bg-surface rounded-box z-1 mt-3 w-52 p-2 shadow-lg border border-theme">
               <li>
-                <Link to="/myProfile">Profile</Link>
+                <Link to="/myProfile" className="text-theme-primary hover:bg-theme-secondary">Profile</Link>
               </li>
               <li>
-                <a onClick={handleSingOut}>Logout</a>
+                <a onClick={handleSingOut} className="text-theme-primary hover:bg-theme-secondary">Logout</a>
               </li>
             </ul>
           </div>
@@ -132,15 +143,9 @@ const Navbar = () => {
           <>
             <Link
               to="/login"
-              className="btn secondary-btn gradient-border font-semibold">
+              className="btn font-semibold text-theme-primary border border-theme hover:bg-theme-secondary">
               Login
             </Link>
-
-            {/* <Link
-              to="/register"
-              className="btn primary-btn">
-              Register
-            </Link> */}
           </>
         )}
       </div>

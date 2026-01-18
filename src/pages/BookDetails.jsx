@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookReview from "../components/BookReview";
+import RelatedBooks from "../components/RelatedBooks";
+import Breadcrumbs from "../components/Breadcrumbs";
 import GlobalError from "./ErrorPage/GlobalError";
 import { BookDetailsSkeleton } from "../components/skeleton_loader/BookDetailsSkeleton";
 
@@ -123,6 +125,7 @@ export default function BookDetails() {
 
   return (
     <div className="min-h-screen py-12 px-6 md:px-16">
+      <Breadcrumbs />
       {/* Main Card */}
       <div
         className="max-w-6xl mx-auto rounded-3xl p-4 shadow-gray-900 shadow-2xl overflow-hidden border border-gray-900"
@@ -162,7 +165,7 @@ export default function BookDetails() {
             <div className="flex items-center gap-2 mb-4">
               <span className="text-yellow-500 text-2xl">⭐</span>
               <span className="text-gray-800 font-semibold text-lg">
-                {book.rating} / 5.0
+                {book.averageRating || book.rating || 0} / 5.0
               </span>
             </div>
 
@@ -291,6 +294,40 @@ export default function BookDetails() {
       )}
       {/* Book review section */}
       <BookReview bookId={id}></BookReview>
+
+      {/* Specifications Section */}
+      <div className="max-w-6xl mx-auto mt-8 rounded-3xl p-8 shadow-gray-900 shadow-2xl border border-gray-900">
+        <h2 className="text-2xl font-bold mb-6">Book Specifications</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="flex justify-between border-b border-gray-700 pb-3">
+            <span className="text-gray-400">ISBN:</span>
+            <span className="font-semibold">{book.isbn || "N/A"}</span>
+          </div>
+          <div className="flex justify-between border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Publisher:</span>
+            <span className="font-semibold">{book.publisher || "N/A"}</span>
+          </div>
+          <div className="flex justify-between border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Pages:</span>
+            <span className="font-semibold">{book.pages || "N/A"}</span>
+          </div>
+          <div className="flex justify-between border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Language:</span>
+            <span className="font-semibold">{book.language || "English"}</span>
+          </div>
+          <div className="flex justify-between border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Category:</span>
+            <span className="font-semibold">{book.category || "General"}</span>
+          </div>
+          <div className="flex justify-between border-b border-gray-700 pb-3">
+            <span className="text-gray-400">Condition:</span>
+            <span className="font-semibold">{book.condition || "New"}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Related Books Section */}
+      <RelatedBooks category={book.category} currentBookId={book._id} />
     </div>
   );
 }

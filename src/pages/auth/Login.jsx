@@ -44,7 +44,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+    <div className="min-h-screen my-10 flex items-center justify-center px-4">
       {/* Container */}
       <div
         className="w-full max-w-md bg-gray-900 bg-opacity-70 backdrop-blur-xl border border-gray-700 rounded-2xl p-8 shadow-xl"
@@ -118,6 +118,65 @@ const Login = () => {
             type="submit"
             className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-white font-semibold shadow-lg">
             {load ? "Logging in..." : "Login"}
+          </button>
+
+          {/* Demo Login Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setLoad(true);
+              login("mdjubayeralfaruk@gmail.com", "123aA/")
+                .then(() => {
+                  setLoad(false);
+                  toast.success("Demo Login Successful");
+                  navigate(from, { relative: true });
+                })
+                .catch(() => {
+                  setLoad(false);
+                  toast.error("Demo login failed. Please try manual login.");
+                });
+            }}
+            className="w-full py-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition text-white font-semibold shadow-lg flex items-center justify-center gap-2"
+          >
+            Try Admin Demo Account
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setLoad(true);
+              login("nayem@gmail.com", "123aA/")
+                .then(() => {
+                  setLoad(false);
+                  toast.success("Demo Login Successful");
+                  navigate(from, { relative: true });
+                })
+                .catch(() => {
+                  setLoad(false);
+                  toast.error("Demo login failed. Please try manual login.");
+                });
+            }}
+            className="w-full py-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition text-white font-semibold shadow-lg flex items-center justify-center gap-2"
+          >
+            Try Seller Demo Account
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setLoad(true);
+              login("mehedi@gmail.com", "123aA/")
+                .then(() => {
+                  setLoad(false);
+                  toast.success("Demo Login Successful");
+                  navigate(from, { relative: true });
+                })
+                .catch(() => {
+                  setLoad(false);
+                  toast.error("Demo login failed. Please try manual login.");
+                });
+            }}
+            className="w-full py-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition text-white font-semibold shadow-lg flex items-center justify-center gap-2"
+          >
+            Try User Demo Account
           </button>
         </form>
 

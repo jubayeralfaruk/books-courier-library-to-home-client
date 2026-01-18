@@ -46,7 +46,7 @@ const Footer = () => {
             Contact
           </h3>
           <p>Email: support@bookscourier.com</p>
-          <p>Phone: +880 1XXX-XXXXXX</p>
+          <p>Phone: +880 1581-291219</p>
           <p>Location: Bangladesh</p>
         </div>
 

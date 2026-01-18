@@ -95,7 +95,7 @@ const Coverage = () => {
     : coverageData.filter(d => d.region === selectedRegion);
 
   return (
-    <section className="py-16 ">
+    <section className="">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Header */}
@@ -109,7 +109,7 @@ const Coverage = () => {
         </div>
 
         {/* Region Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8 text-white">
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
           {regions.map(region => (
             <button
               key={region}

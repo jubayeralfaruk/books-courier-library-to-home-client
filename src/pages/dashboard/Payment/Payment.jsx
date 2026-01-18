@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import UseAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -27,6 +26,8 @@ export default function Payment() {
       return res.data;
     },
   });
+  console.log("bookId data", bookData);
+  console.log("order data", order);
 
   // Loading state
   if (orderLoading || bookLoading) {
@@ -41,13 +42,12 @@ export default function Payment() {
     e.preventDefault();
 
     const paymentInfo = {
-      orderId: id,
+      orderId: order._id,
+      bookId: bookData._id,
       amount: bookData.price,
-      bookId: order.bookId,
-      customer_phone: order.phone,
       bookTitle: bookData.title,
-      customer_email: order.email,
-      status: "paid",
+      customer_phone: order.phone,
+      customer_email: order.user_email,
     };
 
     try {
@@ -69,7 +69,7 @@ export default function Payment() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="shadow-2xl rounded-2xl w-full max-w-lg p-8">
         <h1 className="text-3xl font-bold mb-6 text-center">
-         Please  Complete Book Payment
+          Please Complete Book Payment
         </h1>
 
         <p className="text-center mb-4">

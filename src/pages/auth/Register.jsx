@@ -84,9 +84,9 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+    <div className="min-h-screen my-10 flex items-center justify-center px-4">
       <div
-        className="w-full max-w-md bg-gray-900/70 backdrop-blur-xl border border-gray-700 rounded-2xl p-8 shadow-xl"
+        className="w-full max-w-md bg-gray-900 bg-opacity-70 backdrop-blur-xl border border-gray-700 rounded-2xl p-8 shadow-xl"
         data-aos="zoom-in">
         <h2
           className="text-3xl font-bold text-white text-center mb-6"
@@ -229,6 +229,16 @@ const Register = () => {
             Login
           </Link>
         </p>
+
+        {/* Demo Account Info */}
+        <div className="mt-6 p-4 bg-blue-900/30 border border-blue-700 rounded-lg">
+          <p className="text-sm text-blue-300 text-center">
+            💡 Want to test first? Use our{" "}
+            <Link to="/login" className="font-semibold underline">
+              Demo Account
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

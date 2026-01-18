@@ -7,8 +7,9 @@ import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import EmptyState from "../components/EmptyState";
 
-/* ---------------- Debounce ---------------- */
+/* ---------------- Debounce Hook ---------------- */
 function useDebounce(value, delay = 500) {
   const [debounced, setDebounced] = useState(value);
 
@@ -23,55 +24,77 @@ function useDebounce(value, delay = 500) {
 /* ---------------- Skeleton ---------------- */
 function BookSkeleton() {
   return (
-    <div className="animate-pulse bg-white rounded-xl shadow p-4">
-      <div className="h-52 bg-gray-200 rounded" />
-      <div className="mt-4 h-4 bg-gray-200 rounded w-3/4" />
-      <div className="mt-2 h-3 bg-gray-200 rounded w-full" />
-      <div className="mt-3 h-4 bg-gray-200 rounded w-1/3" />
+    <div className="animate-pulse bg-surface rounded-xl shadow-lg border border-theme p-4">
+      <div className="h-52 bg-theme-secondary rounded" />
+      <div className="mt-4 h-4 bg-theme-secondary rounded w-3/4" />
+      <div className="mt-2 h-3 bg-theme-secondary rounded w-full" />
+      <div className="mt-3 h-4 bg-theme-secondary rounded w-1/3" />
     </div>
   );
 }
 
-/* ---------------- Main Page ---------------- */
+/* ---------------- Main Component ---------------- */
 export default function AllBooks() {
   const axiosSecure = UseAxiosSecure();
   const { user } = useAuth();
 
+  /* ---------- State ---------- */
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("");
+  const [minRating, setMinRating] = useState("");
+  const [priceSort, setPriceSort] = useState("");
+  const [timeSort, setTimeSort] = useState("latest");
   const [page, setPage] = useState(1);
-  const limit = 8;
+  const [allBooks, setAllBooks] = useState([]);
 
+  const limit = 8;
   const debouncedSearch = useDebounce(search);
   const loadMoreRef = useRef(null);
 
-  /* ---------- Fetch Books (SERVER SIDE) ---------- */
-  const {
-    data,
-    isLoading,
-    isFetching,
-  } = useQuery({
-    queryKey: ["books", debouncedSearch, sort, page],
+  /* ---------- Fetch Books ---------- */
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: [
+      "books",
+      debouncedSearch,
+      minRating,
+      priceSort,
+      timeSort,
+      page,
+    ],
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/books?search=${debouncedSearch}&sort=${sort}&page=${page}&limit=${limit}`
-      );
+      const url = `/books?search=${debouncedSearch}&rating=${minRating}&sort=${priceSort}&time=${timeSort}&page=${page}&limit=${limit}`;
+      const res = await axiosSecure.get(url);
       return res.data;
     },
-    keepPreviousData: true,
+    keepPreviousData: false,
   });
 
-  const books = data?.books || [];
+  const currentBooks = data?.books || [];
   const total = data?.total || 0;
 
-  /* ---------- Infinite Scroll ---------- */
+  /* ---------- Accumulate Books (Infinite Scroll) ---------- */
+  useEffect(() => {
+    if (page === 1) {
+      setAllBooks(currentBooks);
+    } else if (currentBooks.length) {
+      setAllBooks((prev) => [...prev, ...currentBooks]);
+    }
+  }, [currentBooks, page]);
+
+  /* ---------- Reset on Filter Change ---------- */
+  useEffect(() => {
+    setPage(1);
+    setAllBooks([]);
+  }, [debouncedSearch, minRating, priceSort, timeSort]);
+
+  /* ---------- Infinite Scroll Observer ---------- */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (
           entries[0].isIntersecting &&
-          books.length < total &&
-          !isFetching
+          allBooks.length < total &&
+          !isFetching &&
+          !isLoading
         ) {
           setPage((prev) => prev + 1);
         }
@@ -81,14 +104,9 @@ export default function AllBooks() {
 
     if (loadMoreRef.current) observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
-  }, [books, total, isFetching]);
+  }, [allBooks, total, isFetching, isLoading]);
 
-  /* ---------- Reset page on search/sort ---------- */
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, sort]);
-
-  /* ---------- Fetch Wishlist ---------- */
+  /* ---------- Wishlist ---------- */
   const { data: wishlist = [], refetch: refetchWishlist } = useQuery({
     queryKey: ["wishlist", user?.email],
     enabled: !!user?.email,
@@ -100,7 +118,6 @@ export default function AllBooks() {
 
   const wishlistIds = wishlist.map((item) => item.bookId);
 
-  /* ---------- Wishlist Toggle ---------- */
   const handleWishlistToggle = async (book) => {
     if (!user) {
       toast.error("Please login first");
@@ -122,10 +139,7 @@ export default function AllBooks() {
         toast.success("Added to wishlist");
       } else {
         await axiosSecure.delete("/wishlist", {
-          data: {
-            user_email: user.email,
-            bookId: book._id,
-          },
+          data: { user_email: user.email, bookId: book._id },
         });
         toast.info("Removed from wishlist");
       }
@@ -136,46 +150,67 @@ export default function AllBooks() {
     }
   };
 
+  /* ---------- UI ---------- */
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-center text-4xl font-bold mb-7">
+    <div className="max-w-7xl mx-auto px-4 py-8 bg-theme-primary min-h-screen">
+      <h2 className="text-center text-4xl font-bold mb-7 text-theme-primary">
         All Books
       </h2>
 
-      {/* ---------- Search & Sort ---------- */}
-      <div className="flex justify-between gap-4 mb-6">
+      {/* ---------- Filters ---------- */}
+      <div className="flex flex-wrap justify-between gap-4 mb-6">
         <input
           type="text"
-          placeholder="Search books by name..."
-          className="input input-bordered max-w-[300px]"
+          placeholder="Search books..."
+          className="flex-1 min-w-[200px] px-4 py-3 bg-surface border border-theme rounded-lg"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <select
-          className="select select-bordered w-60"
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}>
-          <option value="">Sort by price</option>
+          className="w-40 px-4 py-3 bg-surface border border-theme rounded-lg"
+          value={minRating}
+          onChange={(e) => setMinRating(e.target.value)}
+        >
+          <option value="">All Ratings</option>
+          <option value="4">4+ Stars</option>
+          <option value="3">3+ Stars</option>
+          <option value="2">2+ Stars</option>
+        </select>
+
+        <select
+          className="w-40 px-4 py-3 bg-surface border border-theme rounded-lg"
+          value={priceSort}
+          onChange={(e) => setPriceSort(e.target.value)}
+        >
+          <option value="">Price Sort</option>
           <option value="low">Low → High</option>
           <option value="high">High → Low</option>
+        </select>
+
+        <select
+          className="w-40 px-4 py-3 bg-surface border border-theme rounded-lg"
+          value={timeSort}
+          onChange={(e) => setTimeSort(e.target.value)}
+        >
+          <option value="latest">Newest First</option>
+          <option value="oldest">Oldest First</option>
         </select>
       </div>
 
       {/* ---------- Books Grid ---------- */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {(isLoading || isFetching) &&
+        {(isLoading && page === 1) &&
           [...Array(8)].map((_, i) => <BookSkeleton key={i} />)}
 
-        {books.map((book) => (
+        {allBooks.map((book) => (
           <motion.div
             key={book._id}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.04 }}
-            transition={{ duration: 0.3 }}
-            className="relative rounded-xl shadow-gray-900 shadow-2xl">
-
+            className="relative rounded-xl shadow-lg bg-surface border border-theme"
+          >
             <Link to={`/books/${book._id}`}>
               <img
                 src={book.image}
@@ -187,41 +222,52 @@ export default function AllBooks() {
                 <h3 className="font-semibold line-clamp-1">
                   {book.title}
                 </h3>
-                <p className="text-sm text-gray-500 line-clamp-2">
+                <p className="text-sm line-clamp-2">
                   {book.sortDescription}
                 </p>
 
                 <div className="flex justify-between mt-3">
-                  <span>⭐ {book.rating}</span>
+                  <span>⭐ {book?.rating || 0}</span>
                   <span className="font-bold">৳ {book.price}</span>
                 </div>
               </div>
             </Link>
 
-            {/* Wishlist */}
             <button
-              className="absolute top-3 right-3 bg-white p-2 rounded-full"
+              className="absolute top-3 right-3 bg-surface p-2 rounded-full border"
               onClick={(e) => {
                 e.preventDefault();
                 handleWishlistToggle(book);
-              }}>
+              }}
+            >
               {wishlistIds.includes(book._id) ? (
-                <FavoriteIcon className="text-pink-500" />
+                <FavoriteIcon color="error" />
               ) : (
-                <FavoriteBorderIcon className="text-gray-600" />
+                <FavoriteBorderIcon />
               )}
             </button>
           </motion.div>
         ))}
       </div>
 
-      {/* ---------- Infinite Scroll Trigger ---------- */}
+      {/* ---------- Loader ---------- */}
+      {isFetching && page > 1 && (
+        <div className="flex justify-center mt-6">
+          <div className="animate-spin h-8 w-8 border-b-2 rounded-full" />
+        </div>
+      )}
+
       <div ref={loadMoreRef} className="h-12 mt-10" />
 
-      {books.length === 0 && !isLoading && (
-        <p className="text-center text-gray-400 mt-16">
-          No books found
-        </p>
+      {allBooks.length === 0 && !isLoading && (
+        <EmptyState
+          type={search ? "search" : "books"}
+          description={
+            search
+              ? `No books found for "${search}"`
+              : "Try adjusting filters"
+          }
+        />
       )}
     </div>
   );

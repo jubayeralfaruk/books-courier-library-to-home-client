@@ -81,14 +81,14 @@ const Contact = () => {
   ];
 
   return (
-    <div>
-      <section className="px-6 py-16 bg-gradient-to-br from-amber-100 to-orange-100">
+    <div className="min-h-screen bg-theme-primary">
+      <section className="px-6 py-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
               Contact Us
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-theme-secondary max-w-3xl mx-auto">
               Have questions? Need help finding a book? We're here to assist
               you!
             </p>
@@ -97,64 +97,64 @@ const Contact = () => {
           <div className="grid md:grid-cols-2 gap-8">
             {/* Contact Info */}
             <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <MapPin className="w-6 h-6 mr-2 text-amber-600" />
+              <div className="bg-surface rounded-2xl p-8 shadow-lg border border-theme">
+                <h3 className="text-2xl font-bold text-theme-primary mb-6 flex items-center">
+                  <MapPin className="w-6 h-6 mr-2" style={{ color: 'var(--color-primary)' }} />
                   Visit Our Library
                 </h3>
-                <p className="text-gray-700 text-lg mb-4">
+                <p className="text-theme-secondary text-lg mb-4">
                   123 Book Street, Library District
                 </p>
-                <p className="text-gray-700 text-lg">Dhaka 1205, Bangladesh</p>
+                <p className="text-theme-secondary text-lg">Dhaka 1205, Bangladesh</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <Phone className="w-6 h-6 mr-2 text-amber-600" />
+              <div className="bg-surface rounded-2xl p-8 shadow-lg border border-theme">
+                <h3 className="text-2xl font-bold text-theme-primary mb-6 flex items-center">
+                  <Phone className="w-6 h-6 mr-2" style={{ color: 'var(--color-primary)' }} />
                   Call Us
                 </h3>
-                <p className="text-gray-700 text-lg mb-2">
+                <p className="text-theme-secondary text-lg mb-2">
                   Customer Service: +880 1234-567890
                 </p>
-                <p className="text-gray-700 text-lg mb-2">
+                <p className="text-theme-secondary text-lg mb-2">
                   Order Hotline: +880 1234-567891
                 </p>
-                <p className="text-gray-700 text-lg">
+                <p className="text-theme-secondary text-lg">
                   Available: 9 AM - 9 PM (Daily)
                 </p>
               </div>
 
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <Mail className="w-6 h-6 mr-2 text-amber-600" />
+              <div className="bg-surface rounded-2xl p-8 shadow-lg border border-theme">
+                <h3 className="text-2xl font-bold text-theme-primary mb-6 flex items-center">
+                  <Mail className="w-6 h-6 mr-2" style={{ color: 'var(--color-primary)' }} />
                   Email Us
                 </h3>
-                <p className="text-gray-700 text-lg mb-2">
+                <p className="text-theme-secondary text-lg mb-2">
                   General: info@bookcourier.com
                 </p>
-                <p className="text-gray-700 text-lg mb-2">
+                <p className="text-theme-secondary text-lg mb-2">
                   Orders: orders@bookcourier.com
                 </p>
-                <p className="text-gray-700 text-lg">
+                <p className="text-theme-secondary text-lg">
                   Support: support@bookcourier.com
                 </p>
               </div>
 
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <Clock className="w-6 h-6 mr-2 text-amber-600" />
+              <div className="bg-surface rounded-2xl p-8 shadow-lg border border-theme">
+                <h3 className="text-2xl font-bold text-theme-primary mb-6 flex items-center">
+                  <Clock className="w-6 h-6 mr-2" style={{ color: 'var(--color-primary)' }} />
                   Delivery Hours
                 </h3>
-                <p className="text-gray-700 text-lg mb-2">
+                <p className="text-theme-secondary text-lg mb-2">
                   Monday - Saturday: 10 AM - 8 PM
                 </p>
-                <p className="text-gray-700 text-lg">Sunday: 11 AM - 6 PM</p>
+                <p className="text-theme-secondary text-lg">Sunday: 11 AM - 6 PM</p>
               </div>
             </div>
 
             {/* Contact Form */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">
+            <div className="bg-surface rounded-2xl p-8 shadow-lg border border-theme">
+              <h3 className="text-2xl font-bold text-theme-primary mb-6">
                 Send Us a Message
               </h3>
               <div className="space-y-4">
@@ -165,7 +165,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your Name *"
-                    className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors duration-300"
+                    className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
                   />
                 </div>
                 <div>
@@ -175,7 +175,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Your Email *"
-                    className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors duration-300"
+                    className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
                   />
                 </div>
                 <div>
@@ -185,19 +185,9 @@ const Contact = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Your Phone Number *"
-                    className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors duration-300"
+                    className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
                   />
                 </div>
-                {/* <div>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    placeholder="Subject *"
-                    className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors duration-300"
-                  />
-                </div> */}
                 <div>
                   <textarea
                     name="message"
@@ -205,17 +195,24 @@ const Contact = () => {
                     onChange={handleChange}
                     placeholder="Your Message *"
                     rows="6"
-                    className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors duration-300 resize-none"></textarea>
+                    className="w-full px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300 resize-none"></textarea>
                 </div>
                 <button
                   onClick={handleSubmit}
-                  className="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold py-4 px-6 rounded-lg hover:from-amber-700 hover:to-orange-700 transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-105 shadow-lg">
+                  className="w-full font-bold py-4 px-6 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-105 shadow-lg"
+                  style={{ 
+                    backgroundColor: 'var(--color-primary)', 
+                    color: 'white' 
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
+                >
                   <span>
                     {submitted ? "Message Sent Successfully!" : "Send Message"}
                   </span>
                   <Send className="w-5 h-5" />
                 </button>
-                <p className="text-sm text-gray-500 text-center mt-2">
+                <p className="text-sm text-theme-muted text-center mt-2">
                   * Required fields
                 </p>
               </div>
@@ -223,43 +220,43 @@ const Contact = () => {
           </div>
 
           {/* Additional Info */}
-          <div className="mt-12 bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          <div className="mt-12 bg-surface rounded-2xl p-8 shadow-lg border border-theme">
+            <h3 className="text-2xl font-bold text-theme-primary mb-6 text-center">
               Frequently Asked Questions
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-bold text-gray-800 mb-2">
+                <h4 className="font-bold text-theme-primary mb-2">
                   What is the delivery charge?
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-theme-secondary">
                   Delivery is free for orders above 1000 BDT. For orders below,
                   a nominal fee of 50 BDT applies within Dhaka.
                 </p>
               </div>
               <div>
-                <h4 className="font-bold text-gray-800 mb-2">
+                <h4 className="font-bold text-theme-primary mb-2">
                   Can I return a book?
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-theme-secondary">
                   Yes, you can return books within 7 days if they are in
                   original condition. Contact our support team for returns.
                 </p>
               </div>
               <div>
-                <h4 className="font-bold text-gray-800 mb-2">
+                <h4 className="font-bold text-theme-primary mb-2">
                   Do you deliver outside Dhaka?
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-theme-secondary">
                   Yes, we deliver nationwide! Delivery time varies: 2-3 days for
                   major cities, 4-7 days for other areas.
                 </p>
               </div>
               <div>
-                <h4 className="font-bold text-gray-800 mb-2">
+                <h4 className="font-bold text-theme-primary mb-2">
                   How can I track my order?
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-theme-secondary">
                   You'll receive a tracking number via SMS and email once your
                   order is dispatched. Use it to track your delivery.
                 </p>

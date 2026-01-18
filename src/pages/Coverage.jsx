@@ -95,30 +95,35 @@ const Coverage = () => {
     : coverageData.filter(d => d.region === selectedRegion);
 
   return (
-    <section className="py-16 ">
+    <section className="py-16 bg-theme-primary">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-4xl font-bold mb-4 text-theme-primary">
             🚚 Nationwide Delivery Coverage
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            We deliver books to <span className="font-semibold text-blue-600">{coverageData.length} districts</span> across all 8 divisions of Bangladesh
+          <p className="text-theme-secondary text-lg max-w-2xl mx-auto">
+            We deliver books to <span className="font-semibold" style={{ color: 'var(--color-primary)' }}>{coverageData.length} districts</span> across all 8 divisions of Bangladesh
           </p>
         </div>
 
         {/* Region Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8 text-white">
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
           {regions.map(region => (
             <button
               key={region}
               onClick={() => setSelectedRegion(region)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 selectedRegion === region
-                  ? "bg-blue-600 text-white shadow-lg"
-                  : "hover:text-gray-700 hover:bg-gray-100 border border-gray-200"
+                  ? "shadow-lg"
+                  : "border hover:bg-theme-secondary"
               }`}
+              style={{
+                backgroundColor: selectedRegion === region ? 'var(--color-primary)' : 'transparent',
+                color: selectedRegion === region ? 'white' : 'var(--text-primary)',
+                borderColor: selectedRegion === region ? 'transparent' : 'var(--border-primary)'
+              }}
             >
               {region === "all" ? "All Regions" : region}
             </button>
@@ -129,10 +134,10 @@ const Coverage = () => {
           
           {/* Interactive Map */}
           <div className="lg:col-span-2">
-            <div className="bg-white p-6 rounded-2xl shadow-lg">
+            <div className="bg-surface p-6 rounded-2xl shadow-lg border border-theme">
               <svg viewBox="0 0 500 400" className="w-full h-auto">
                 {/* Bangladesh border */}
-                <rect x="0" y="0" width="500" height="400" fill="#f0f9ff" />
+                <rect x="0" y="0" width="500" height="400" fill="var(--bg-secondary)" />
                 
                 {/* District markers */}
                 {filteredData.map((district, idx) => {
@@ -202,7 +207,7 @@ const Coverage = () => {
                 {Object.entries(regionColors).map(([region, color]) => (
                   <div key={region} className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }}></div>
-                    <span className="text-gray-600">{region}</span>
+                    <span className="text-theme-secondary">{region}</span>
                   </div>
                 ))}
               </div>
@@ -213,7 +218,7 @@ const Coverage = () => {
           <div className="space-y-6">
             
             {/* Stats Cards */}
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-2xl shadow-lg">
+            <div className="text-white p-6 rounded-2xl shadow-lg" style={{ background: 'linear-gradient(to bottom right, var(--color-primary), var(--color-primary-hover))' }}>
               <div className="flex items-center gap-3 mb-2">
                 <Package className="w-8 h-8" />
                 <div>
@@ -223,9 +228,9 @@ const Coverage = () => {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-              <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-blue-600" />
+            <div className="bg-surface p-6 rounded-2xl shadow-lg border border-theme">
+              <h3 className="font-semibold text-theme-primary mb-4 flex items-center gap-2">
+                <MapPin className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
                 Coverage Highlights
               </h3>
               <div className="space-y-3">
@@ -233,42 +238,47 @@ const Coverage = () => {
                   const count = coverageData.filter(d => d.region === region).length;
                   return (
                     <div key={region} className="flex items-center justify-between text-sm">
-                      <span className="text-gray-700">{region}</span>
-                      <span className="font-semibold text-gray-900">{count} districts</span>
+                      <span className="text-theme-secondary">{region}</span>
+                      <span className="font-semibold text-theme-primary">{count} districts</span>
                     </div>
                   );
                 })}
               </div>
             </div>
 
-            <div className="bg-green-50 p-4 rounded-xl border border-green-200">
+            <div className="p-4 rounded-xl border" style={{ backgroundColor: 'var(--success-bg)', borderColor: 'var(--color-success)' }}>
               <div className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <Check className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-success)' }} />
                 <div className="text-sm">
-                  <p className="font-semibold text-green-900 mb-1">Fast Delivery</p>
-                  <p className="text-green-700">3-5 business days to most locations</p>
+                  <p className="font-semibold mb-1" style={{ color: 'var(--success-text)' }}>Fast Delivery</p>
+                  <p style={{ color: 'var(--success-text)' }}>3-5 business days to most locations</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         {/* District List */}
-        <div className="mt-12 rounded-2xl shadow-lg">
-          <h3 className="text-2xl font-bold mb-6">
+        <div className="mt-12 bg-surface rounded-2xl shadow-lg p-8 border border-theme">
+          <h3 className="text-2xl font-bold mb-6 text-theme-primary">
             {selectedRegion === "all" ? "All Districts" : `${selectedRegion} Division`}
           </h3>
           <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredData.map((district, idx) => (
               <div
                 key={idx}
-                className="p-4 bg-gray-100 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer"
-                style={{ borderLeftColor: regionColors[district.region], borderLeftWidth: "3px" }}
+                className="p-4 rounded-lg border hover:shadow-md transition-all cursor-pointer"
+                style={{ 
+                  backgroundColor: 'var(--bg-secondary)',
+                  borderColor: 'var(--border-primary)',
+                  borderLeftColor: regionColors[district.region], 
+                  borderLeftWidth: "3px" 
+                }}
                 onMouseEnter={() => setHoveredDistrict(idx)}
                 onMouseLeave={() => setHoveredDistrict(null)}
               >
-                <div className="font-semibold text-gray-900 mb-1">{district.district}</div>
-                <div className="text-xs text-gray-500 mb-2">{district.region}</div>
-                <div className="text-xs text-gray-600">
+                <div className="font-semibold text-theme-primary mb-1">{district.district}</div>
+                <div className="text-xs text-theme-muted mb-2">{district.region}</div>
+                <div className="text-xs text-theme-secondary">
                   {district.areas.slice(0, 2).join(", ")}
                   {district.areas.length > 2 && ` +${district.areas.length - 2}`}
                 </div>

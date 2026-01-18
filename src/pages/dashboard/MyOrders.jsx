@@ -86,14 +86,14 @@ export default function MyOrdersTailwind() {
 
 
   return (
-    <div className="p-6 w-full">
-      <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+    <div className="p-6 w-full bg-theme-primary min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-theme-primary">My Orders</h1>
 
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto rounded-xl shadow-lg">
-        <table className="table w-full">
-          <thead className="">
-            <tr className="text-gray-700 text-sm">
+        <table className="table w-full bg-surface">
+          <thead className="bg-theme-secondary">
+            <tr className="text-theme-primary text-sm">
               <th className="font-semibold">Book</th>
               <th className="font-semibold">Details</th>
               <th className="font-semibold">Order Date</th>
@@ -110,7 +110,7 @@ export default function MyOrdersTailwind() {
                   {[...Array(4)].map((_, i) => (
                     <div
                       key={i}
-                      className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+                      className="h-16 mb-3 rounded-lg bg-theme-secondary animate-pulse"
                     />
                   ))}
                 </div>
@@ -121,23 +121,26 @@ export default function MyOrdersTailwind() {
               {orders.map((order) => (
                 <tr
                   key={order._id}
-                  className="hover">
-                  <td>{order.bookTitle || order.bookId}</td>
+                  className="hover:bg-theme-secondary text-theme-primary">
+                  <td className="text-theme-primary">{order.bookTitle || order.bookId}</td>
                   <td>
                     <Link
                       to={`/books/${order.bookId}`}
-                      className="btn btn-xs btn-outline">
+                      className="btn btn-xs border border-theme text-theme-primary hover:bg-theme-secondary">
                       View
                     </Link>
                   </td>
-                  <td>{order.orderDate?.slice(0, 10) || "—"}</td>
+                  <td className="text-theme-secondary">{order.orderDate?.slice(0, 10) || "—"}</td>
                   <td>
                     <span
                       className={
                         order.paymentStatus === "paid"
-                          ? "badge badge-success"
-                          : "badge badge-error"
-                      }>
+                          ? "badge text-white"
+                          : "badge text-white"
+                      }
+                      style={{
+                        backgroundColor: order.paymentStatus === "paid" ? 'var(--color-success)' : 'var(--color-error)'
+                      }}>
                       {order.paymentStatus || "unpaid"}
                     </span>
                   </td>
@@ -150,13 +153,15 @@ export default function MyOrdersTailwind() {
                     {order.status === "pending" ? (
                       <div className="flex gap-2">
                         <button
-                          className="btn btn-xs btn-error"
+                          className="btn btn-xs text-white"
+                          style={{ backgroundColor: 'var(--color-error)' }}
                           onClick={() => handleCancel(order._id)}>
                           Cancel
                         </button>
                         {order.paymentStatus !== "paid" && (
                           <button
-                            className="btn btn-xs btn-primary"
+                            className="btn btn-xs text-white"
+                            style={{ backgroundColor: 'var(--color-primary)' }}
                             onClick={() => handlePay(order._id)}>
                             Pay Now
                           </button>
@@ -165,19 +170,21 @@ export default function MyOrdersTailwind() {
                     ) : order.status === "delivered" ? (
                       reviewsWithOrderId.includes(order._id) ? (
                         <button
-                          className="btn btn-xs btn-primary"
+                          className="btn btn-xs text-white"
+                          style={{ backgroundColor: 'var(--color-primary)', opacity: 0.6 }}
                           disabled>
                           Reviewed
                         </button>
                       ) : (
                         <button
-                          className="btn btn-xs btn-primary"
+                          className="btn btn-xs text-white"
+                          style={{ backgroundColor: 'var(--color-primary)' }}
                           onClick={() => handleReview(order._id)}>
                           Review
                         </button>
                       )
                     ) : (
-                      <span>—</span>
+                      <span className="text-theme-muted">—</span>
                     )}
                   </td>
                 </tr>
@@ -190,27 +197,26 @@ export default function MyOrdersTailwind() {
       {/* Mobile Card View */}
       {isLoading && (
         <div className="md:hidden text-center py-20">
-          <span className="loading loading-spinner loading-lg"></span>
+          <span className="loading loading-spinner loading-lg" style={{ color: 'var(--color-primary)' }}></span>
         </div>
       )}
       <div className="md:hidden grid grid-cols-1 gap-4">
         {orders.map((order) => (
           <div
             key={order._id}
-            className="card bg-gray-800 shadow-lg rounded-xl p-4">
-            <h2 className="font-semibold text-lg">
+            className="bg-surface shadow-lg rounded-xl p-4 border border-theme">
+            <h2 className="font-semibold text-lg text-theme-primary">
               {order.bookTitle || order.bookId}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-theme-secondary">
               Order Date: {order.orderDate?.slice(0, 10)}
             </p>
             <div className="flex flex-wrap gap-2 mt-2">
               <span
-                className={
-                  order.paymentStatus === "paid"
-                    ? "badge badge-success"
-                    : "badge badge-error"
-                }>
+                className="badge text-white"
+                style={{
+                  backgroundColor: order.paymentStatus === "paid" ? 'var(--color-success)' : 'var(--color-error)'
+                }}>
                 {order.paymentStatus || "unpaid"}
               </span>
               <span className={getStatusClass(order.status)}>
@@ -221,13 +227,15 @@ export default function MyOrdersTailwind() {
               {order.status === "pending" ? (
                 <div className="flex gap-2">
                   <button
-                    className="btn btn-xs btn-error"
+                    className="btn btn-xs text-white"
+                    style={{ backgroundColor: 'var(--color-error)' }}
                     onClick={() => handleCancel(order._id)}>
                     Cancel
                   </button>
                   {order.paymentStatus !== "paid" && (
                     <button
-                      className="btn btn-xs btn-primary"
+                      className="btn btn-xs text-white"
+                      style={{ backgroundColor: 'var(--color-primary)' }}
                       onClick={() => handlePay(order._id)}>
                       Pay Now
                     </button>
@@ -236,23 +244,25 @@ export default function MyOrdersTailwind() {
               ) : order.status === "delivered" ? (
                 reviewsWithOrderId.includes(order._id) ? (
                   <button
-                    className="btn btn-xs btn-primary"
+                    className="btn btn-xs text-white"
+                    style={{ backgroundColor: 'var(--color-primary)', opacity: 0.6 }}
                     disabled>
                     Reviewed
                   </button>
                 ) : (
                   <button
-                    className="btn btn-xs btn-primary"
+                    className="btn btn-xs text-white"
+                    style={{ backgroundColor: 'var(--color-primary)' }}
                     onClick={() => handleReview(order._id)}>
                     Review
                   </button>
                 )
               ) : (
-                <span>—</span>
+                <span className="text-theme-muted">—</span>
               )}
               <Link
                 to={`/books/${order.bookId}`}
-                className="btn btn-xs btn-outline">
+                className="btn btn-xs border border-theme text-theme-primary hover:bg-theme-secondary">
                 View Book
               </Link>
             </div>
@@ -260,7 +270,7 @@ export default function MyOrdersTailwind() {
         ))}
       </div>
       {orders.length === 0 && !isLoading && (
-        <p className="text-center py-10 text-gray-400">
+        <p className="text-center py-10 text-theme-muted">
           No orders found
         </p>
       )}

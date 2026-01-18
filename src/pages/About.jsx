@@ -43,35 +43,24 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
-      {/* Header Banner */}
-      {/* <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white py-16 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="flex items-center justify-center mb-4">
-            <BookOpen className="w-16 h-16 mr-4" />
-            <h1 className="text-5xl md:text-6xl font-bold">BookCourier</h1>
-          </div>
-          <p className="text-xl md:text-2xl">Your Library at Your Doorstep</p>
-        </div>
-      </div> */}
-
+    <div className="min-h-screen bg-theme-primary">
       {/* About Section */}
       <section className="px-6 py-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">About Us</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-theme-primary mb-4">About Us</h2>
+            <p className="text-xl text-theme-secondary max-w-3xl mx-auto">
               Connecting readers with books through our innovative library-to-home delivery service
             </p>
           </div>
 
           {/* Story */}
-          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 mb-12">
-            <h3 className="text-3xl font-bold text-gray-800 mb-6">Our Story</h3>
-            <p className="text-gray-700 text-lg leading-relaxed mb-4">
+          <div className="bg-surface rounded-3xl shadow-lg p-8 md:p-12 mb-12 border border-theme">
+            <h3 className="text-3xl font-bold text-theme-primary mb-6">Our Story</h3>
+            <p className="text-theme-secondary text-lg leading-relaxed mb-4">
               BookCourier was founded with a simple mission: to make books more accessible to everyone. We understand that visiting a library isn't always convenient, so we bring the library to you. Our platform connects experienced librarians who curate and sell quality books directly to readers through our efficient courier service.
             </p>
-            <p className="text-gray-700 text-lg leading-relaxed">
+            <p className="text-theme-secondary text-lg leading-relaxed">
               Whether you're looking for bestsellers, academic texts, children's books, or rare editions, our librarians help you find exactly what you need and deliver it right to your doorstep. We believe that every book has a reader, and every reader deserves easy access to books.
             </p>
           </div>

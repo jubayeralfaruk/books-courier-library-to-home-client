@@ -71,11 +71,11 @@ export default function ApproveSeller() {
       {[...Array(9)].map((_, i) => (
         <div
           key={i}
-          className="bg-white rounded-xl shadow-lg p-5 animate-pulse space-y-4">
-          <div className="h-6 bg-gray-300 rounded"></div>
-          <div className="h-4 bg-gray-300 rounded"></div>
-          <div className="h-4 bg-gray-300 rounded"></div>
-          <div className="h-10 bg-gray-300 rounded"></div>
+          className="bg-surface rounded-xl shadow-lg p-5 animate-pulse space-y-4 border border-theme">
+          <div className="h-6 bg-theme-secondary rounded"></div>
+          <div className="h-4 bg-theme-secondary rounded"></div>
+          <div className="h-4 bg-theme-secondary rounded"></div>
+          <div className="h-10 bg-theme-secondary rounded"></div>
         </div>
       ))}
     </div>
@@ -84,9 +84,9 @@ export default function ApproveSeller() {
   if (isLoading) return <Skeleton />;
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100">
+    <div className="min-h-screen p-6 bg-theme-primary">
       <h1
-        className="text-3xl font-bold mb-6"
+        className="text-3xl font-bold mb-6 text-theme-primary"
         data-aos="fade-up">
         Approve Seller Accounts
       </h1>
@@ -96,24 +96,24 @@ export default function ApproveSeller() {
         {sellers.map((seller) => (
           <div
             key={seller._id}
-            className="bg-white p-6 rounded-2xl shadow-xl border animate__animated animate__fadeIn"
+            className="bg-surface p-6 rounded-2xl shadow-xl border border-theme animate__animated animate__fadeIn"
             data-aos="fade-up">
-            <h2 className="text-xl font-bold mb-2">{seller.libraryName}</h2>
+            <h2 className="text-xl font-bold mb-2 text-theme-primary">{seller.libraryName}</h2>
 
-            <p className="text-gray-700">
+            <p className="text-theme-secondary">
               <span className="font-semibold">Owner:</span> {seller.name}
             </p>
-            <p className="text-gray-700">
+            <p className="text-theme-secondary">
               <span className="font-semibold">Email:</span> {seller.email}
             </p>
-            <p className="text-gray-700">
+            <p className="text-theme-secondary">
               <span className="font-semibold">NID:</span> {seller.nidNumber}
             </p>
-            <p className="text-gray-700">
+            <p className="text-theme-secondary">
               <span className="font-semibold">Birth Date:</span>{" "}
               {seller.birthDate}
             </p>
-            <p className="text-gray-700">
+            <p className="text-theme-secondary">
               <span className="font-semibold">Address:</span>{" "}
               {seller.libraryAddress}
             </p>
@@ -121,27 +121,29 @@ export default function ApproveSeller() {
             {/* Status Badge */}
             <div className="mt-3">
               {seller.status === "pending" && (
-                <span className="badge badge-warning text-sm">Pending</span>
+                <span className="badge text-white text-sm" style={{ backgroundColor: 'var(--color-warning)' }}>Pending</span>
               )}
               {seller.status === "approved" && (
-                <span className="badge badge-success text-sm">Approved</span>
+                <span className="badge text-white text-sm" style={{ backgroundColor: 'var(--color-success)' }}>Approved</span>
               )}
               {seller.status === "rejected" && (
-                <span className="badge badge-error text-sm">Rejected</span>
+                <span className="badge text-white text-sm" style={{ backgroundColor: 'var(--color-error)' }}>Rejected</span>
               )}
             </div>
 
             {/* Action Buttons */}
             <div className="mt-4 w-full flex items-center gap-3">
               <button
-                className="btn btn-success btn-sm"
+                className="btn btn-sm text-white"
+                style={{ backgroundColor: 'var(--color-success)' }}
                 disabled={seller.status !== "pending"}
                 onClick={() => approveMutation.mutate(seller)}>
                 Approve
               </button>
 
               <button
-                className="btn btn-error btn-sm"
+                className="btn btn-sm text-white"
+                style={{ backgroundColor: 'var(--color-error)' }}
                 disabled={seller.status !== "pending"}
                 onClick={() => rejectMutation.mutate(seller)}>
                 Reject

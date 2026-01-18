@@ -89,12 +89,12 @@ export default function UserManagement() {
 
   return (
     <div
-      className="p-4"
+      className="p-4 bg-theme-primary min-h-screen"
       data-aos="fade-up">
       {/* -------------------- TITLE -------------------- */}
       <h1
         data-aos="fade-down"
-        className="text-3xl font-bold mb-6">
+        className="text-3xl font-bold mb-6 text-theme-primary">
         User Management
       </h1>
 
@@ -102,22 +102,22 @@ export default function UserManagement() {
       <input
         type="text"
         placeholder="Search user..."
-        className="input text-white input-bordered w-full max-w-md mb-4"
+        className="w-full max-w-md mb-4 px-4 py-3 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-muted focus:outline-none focus:border-[var(--color-primary)] transition-colors duration-300"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
       {/* -------------------- DESKTOP TABLE -------------------- */}
-      <div className="overflow-x-auto hidden md:block">
-        <table className="table w-full">
-          <thead className="bg-base-200">
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Update Role</th>
-              <th>Action</th>
+      <div className="overflow-x-auto hidden md:block rounded-xl shadow-lg">
+        <table className="table w-full bg-surface">
+          <thead className="bg-theme-secondary">
+            <tr className="text-theme-primary">
+              <th className="font-semibold">#</th>
+              <th className="font-semibold">Name</th>
+              <th className="font-semibold">Email</th>
+              <th className="font-semibold">Role</th>
+              <th className="font-semibold">Update Role</th>
+              <th className="font-semibold">Action</th>
             </tr>
           </thead>
 
@@ -128,31 +128,31 @@ export default function UserManagement() {
                   {[...Array(4)].map((_, i) => (
                     <div
                       key={i}
-                      className="h-16 mb-3 rounded-lg bg-gray-200 animate-pulse"
+                      className="h-16 mb-3 rounded-lg bg-theme-secondary animate-pulse"
                     />
                   ))}
                 </div>
               </td>
             </tbody>
           ) : (
-            <tbody className="[&>tr>td]:bg-transparent">
+            <tbody>
               {users.map((user, idx) => (
                 <tr
-                  className="shadow-sm"
+                  className="hover:bg-theme-secondary text-theme-primary"
                   key={user._id}>
-                  <td>{idx + 1}</td>
-                  <td className="font-semibold">{user.displayName}</td>
-                  <td>{user.email}</td>
+                  <td className="text-theme-primary">{idx + 1}</td>
+                  <td className="font-semibold text-theme-primary">{user.displayName}</td>
+                  <td className="text-theme-secondary">{user.email}</td>
 
                   <td>
-                    <span className="badge badge-primary">
+                    <span className="badge text-white" style={{ backgroundColor: 'var(--color-primary)' }}>
                       {user.role || "user"}
                     </span>
                   </td>
 
                   <td>
                     <select
-                      className="select select-sm bg-gray-800 text-white border border-gray-300"
+                      className="px-3 py-2 bg-theme-secondary border border-theme rounded text-theme-primary focus:outline-none focus:border-[var(--color-primary)]"
                       defaultValue={user.role || "user"}
                       onChange={(e) =>
                         Swal.fire({
@@ -178,7 +178,8 @@ export default function UserManagement() {
 
                   <td>
                     <button
-                      className="btn btn-error btn-sm"
+                      className="btn btn-sm text-white"
+                      style={{ backgroundColor: 'var(--color-error)' }}
                       onClick={() =>
                         Swal.fire({
                           title: "Are you sure?",
@@ -205,26 +206,26 @@ export default function UserManagement() {
       {/* -------------------- MOBILE VIEW -------------------- */}
       {isLoading && (
         <div className="md:hidden text-center py-20">
-          <span className="loading loading-spinner loading-lg"></span>
+          <span className="loading loading-spinner loading-lg" style={{ color: 'var(--color-primary)' }}></span>
         </div>
       )}
       <div className="grid gap-4 md:hidden">
         {users.map((user) => (
           <div
             key={user._id}
-            className="border rounded-lg p-4 shadow bg-white"
+            className="border border-theme rounded-lg p-4 shadow-lg bg-surface"
             data-aos="fade-up">
-            <h2 className="font-bold text-lg">{user.name}</h2>
-            <p className="text-gray-600">{user.email}</p>
+            <h2 className="font-bold text-lg text-theme-primary">{user.name}</h2>
+            <p className="text-theme-secondary">{user.email}</p>
 
-            <span className="badge badge-primary mt-2">
+            <span className="badge text-white mt-2" style={{ backgroundColor: 'var(--color-primary)' }}>
               {user.role || "user"}
             </span>
 
             <div className="mt-3">
-              <label className="font-semibold">Update Role</label>
+              <label className="font-semibold text-theme-primary">Update Role</label>
               <select
-                className="select w-full mt-1 bg-gray-800 text-white border border-gray-300"
+                className="w-full mt-1 px-3 py-2 bg-theme-secondary border border-theme rounded text-theme-primary focus:outline-none focus:border-[var(--color-primary)]"
                 defaultValue={user.role || "user"}
                 onChange={(e) =>
                   Swal.fire({
@@ -249,7 +250,8 @@ export default function UserManagement() {
             </div>
 
             <button
-              className="btn btn-error btn-sm w-full mt-4"
+              className="btn btn-sm w-full mt-4 text-white"
+              style={{ backgroundColor: 'var(--color-error)' }}
               onClick={() =>
                 Swal.fire({
                   title: "Are you sure?",
@@ -270,9 +272,9 @@ export default function UserManagement() {
 
       </div>
         {
-          users.length === 0 && (
+          users.length === 0 && !isLoading && (
             <div className="">
-              <h2 className="text-xl text-gray-600 mt-10 text-center">User Not Found</h2>
+              <h2 className="text-xl text-theme-secondary mt-10 text-center">User Not Found</h2>
             </div>
           )
         }
